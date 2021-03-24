@@ -213,3 +213,10 @@ class Player(object):
 
         return self.s_fitness
 
+    def __lt__(self, other):
+        # Set self and other fitness if not done before
+        self.fitness()
+        other.fitness()
+
+        return self.s_fitness - other.s_fitness
+
