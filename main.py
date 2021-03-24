@@ -1,43 +1,63 @@
 import player as obj
 import time
-import functions as fun
+import json
+import sys
+import signal
+import csv, itertools
+import random
 
-# with open("dataset.txt", "r") as file:
-#     lines = [line.rstrip('\n') for line in file]
-#     print(lines)
+# Define signal handler for Ctrl+C for ordered interrupt
+def signal_handler(sig, frame):
+    # TODO: Change this to corresponding function calls
+    # if algo and not algo.winner_node and start_time:
+    #     print(f'\nAlgorithm Run Interrupted \t\t ⏱  {round(time.time() - start_time, 6)} seconds\n----------------------------------------\n')
+    #     print("\t❌  Failure by Ctrl+C! No solution found with those params. ❌ ")
+    #     print(f'\nExpanded nodes: {algo.expanded_count}')
+    print('\nExiting by SIGINT...')
+    sys.exit(2)
 
-def aux(player_class):
-    print(player_class(10, 20))
+signal.signal(signal.SIGINT, signal_handler)
 
-# print(obj.PlayerClass.Arquero(10, 20))
-# aux(obj.PlayerClass.Arquero)
+def read_equipment_tsv(filename, equipment_type, max_rows):
+    with open(filename) as file:
+        tsv_reader = csv.reader(file, delimiter="\t")
+        next(tsv_reader) # Skip header column
+        return [obj.Equipment.new_from_row(equipment_type, row) for row in itertools.islice(tsv_reader, max_rows)]
 
-Boots = obj.Equipment(obj.EquipmentType.Boots, 1, obj.Stats(1, 1, 1, 1, 1))
-Weapon = obj.Equipment(obj.EquipmentType.Weapon, 1, obj.Stats(1, 1, 1, 1, 1))
-Helmet = obj.Equipment(obj.EquipmentType.Helmet, 1, obj.Stats(1, 1, 1, 1, 1))
-Armor = obj.Equipment(obj.EquipmentType.Armor, 1, obj.Stats(1, 1, 1, 1, 1))
-Gloves = obj.Equipment(obj.EquipmentType.Gloves, 1, obj.Stats(1, 1, 1, 1, 1))
+start_time = time.time()
 
-player = obj.Player(obj.PlayerClass.Arquero, 0.8, Weapon, Boots, Helmet, Gloves, Armor)
+# Read configurations from file
+with open("config.json") as file:
+    config = json.load(file)
 
-Boots2 = obj.Equipment(obj.EquipmentType.Boots, 2, obj.Stats(1, 1, 1, 1, 1))
-Weapon2 = obj.Equipment(obj.EquipmentType.Weapon, 2, obj.Stats(1, 1, 1, 1, 1))
-Helmet2 = obj.Equipment(obj.EquipmentType.Helmet, 2, obj.Stats(1, 1, 1, 1, 1))
-Armor2 = obj.Equipment(obj.EquipmentType.Armor, 2, obj.Stats(1, 1, 1, 1, 1))
-Gloves2 = obj.Equipment(obj.EquipmentType.Gloves, 2, obj.Stats(1, 1, 1, 1, 1))
+# Parse each TSV to get List of possible value for each equipment type
+# Number of lines per file limited by max_rows config
+max_rows = int(config["max_rows_tsv"])
+if max_rows <= 0:
+    print("Invalid max rows!")
+    sys.exit(1)
 
-player2 = obj.Player(obj.PlayerClass.Arquero, 1.5, Weapon2, Boots2, Helmet2, Gloves2, Armor2)
+weapon_list = read_equipment_tsv(config["armas_file"], obj.EquipmentType.Weapon, max_rows)
+boots_list = read_equipment_tsv(config["botas_file"], obj.EquipmentType.Boots, max_rows)
+helmet_list = read_equipment_tsv(config["cascos_file"], obj.EquipmentType.Helmet, max_rows)
+gloves_list = read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Gloves, max_rows)
+armor_list = read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
 
-# player.player_stats()
-# start_time = time.time()
-# print(player.fitness(), time.time() - start_time)
-# start_time = time.time()
-# print(player.fitness(), time.time() - start_time)
+end_time = time.time()
+print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
+start_time = end_time
 
-# print(player.genes(),'\t', player2.genes(), '\n', fun.Crossover.one_point(player, player2))
+Weapon = weapon_list[random.randint(0, len(weapon_list) - 1)]
+Boots = boots_list[random.randint(0, len(boots_list) - 1)]
+Helmet = helmet_list[random.randint(0, len(helmet_list) - 1)]
+Gloves = gloves_list[random.randint(0, len(gloves_list) - 1)]
+Armor = armor_list[random.randint(0, len(armor_list) - 1)]
 
-# print(player.genes(),'\t', player2.genes(), '\n', fun.Crossover.two_points(player, player2))
+print(Weapon, Boots, Helmet, Gloves, Armor)
 
-# print(player.genes(),'\t', player2.genes(), '\n', fun.Crossover.ring(player, player2))
+player = obj.Player(obj.PlayerClass.Arquero, 1.0, Weapon, Boots, Helmet, Gloves, Armor)
 
-print(player.genes(),'\t', player2.genes(), '\n', fun.Crossover.uniform(player, player2))
+player.player_stats()
+print(player.fitness(), time.time() - start_time)
+start_time = time.time()
+print(player.fitness(), time.time() - start_time)
