@@ -48,6 +48,8 @@ class Mutation:
 
     @staticmethod
     def gene(player):
+        # gene = random.randint(0,player.n_genes-1)
+        # rand_pm(0.5)
         return
     
     @staticmethod
@@ -62,6 +64,8 @@ class Mutation:
     def full(player):
         return
 
+    def rand_pm(self, Pm):
+        return random.randint(0,100)<Pm*100
 
 class Selection:
 
