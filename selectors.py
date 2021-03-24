@@ -4,9 +4,6 @@ import bisect
 
 # Select K members from collection
 class Selector(object):
-    def __init__(self, K):
-        self.K = K
-
     # Take count elements from collection using Elite selector
     @classmethod
     def elite_selector(cls, count, collection):
