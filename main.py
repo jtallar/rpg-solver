@@ -5,6 +5,7 @@ import sys
 import signal
 import csv, itertools
 import random
+import functions as fn
 
 # Define signal handler for Ctrl+C for ordered interrupt
 def signal_handler(sig, frame):
@@ -44,7 +45,7 @@ gloves_list = read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Glove
 armor_list = read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
 
 end_time = time.time()
-print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
+# print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
 Weapon = weapon_list[random.randint(0, len(weapon_list) - 1)]
@@ -53,11 +54,16 @@ Helmet = helmet_list[random.randint(0, len(helmet_list) - 1)]
 Gloves = gloves_list[random.randint(0, len(gloves_list) - 1)]
 Armor = armor_list[random.randint(0, len(armor_list) - 1)]
 
-print(Weapon, Boots, Helmet, Gloves, Armor)
+# print(Weapon, Boots, Helmet, Gloves, Armor)
 
 player = obj.Player(obj.PlayerClass.Arquero, 1.0, Weapon, Boots, Helmet, Gloves, Armor)
 
 player.player_stats()
-print(player.fitness(), time.time() - start_time)
+# print(player.fitness(), time.time() - start_time)
 start_time = time.time()
-print(player.fitness(), time.time() - start_time)
+# print(player.fitness(), time.time() - start_time)
+# print(player.genes(), '\n')
+# print(fn.SimpleGen(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(fn.MultiLimited(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(fn.MultiUniform(0.5, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(fn.Full(1, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())

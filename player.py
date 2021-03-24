@@ -218,3 +218,11 @@ class Player(object):
 
     def genes(self):
         return [self.height, self.weapon, self.boots, self.helmet, self.gloves, self.armor]
+
+    def update(self, genes):
+        self.height = genes[0]
+        self.weapon = genes[1]
+        self.boots = genes[2]
+        self.helmet = genes[3]
+        self.gloves = genes[4]
+        self.armor = genes[5]
