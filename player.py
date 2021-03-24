@@ -48,6 +48,12 @@ class Stats(object):
         self.resistance = resistance
         self.life = life
     
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return "Stats(strength=%s,agility=%s,expertise=%s,resistance=%s,life=%s)" % (self.strength, self.agility, self.expertise, self.resistance, self.life)
+
     def add_stats(self, other_stats):
         self.strength += other_stats.strength
         self.agility += other_stats.agility
@@ -121,17 +127,17 @@ class Player(object):
 
         # Initialize stat saved values to None, will be calculated and stored on demand
         # TODO: Check si me sirve guardar todas, puedo sino guardar solo fitness
-        self.player_stats = None
-        self.attack_mod = None
-        self.defense_mod = None
-        self.attack = None
-        self.defense = None
+        self.s_player_stats = None
+        self.s_attack_mod = None
+        self.s_defense_mod = None
+        self.s_attack = None
+        self.s_defense = None
         self.s_fitness = None
     
     def player_stats(self):
         # Player Stats is an object, no need to add is not None to condition
-        if self.player_stats:
-            return self.player_stats
+        if self.s_player_stats:
+            return self.s_player_stats
 
         # Accumulate item stats
         total_item_stats = Stats(0, 0, 0, 0, 0)
@@ -139,40 +145,40 @@ class Player(object):
             total_item_stats.add_stats(item.stats)
         
         # Calculate player stats
-        self.player_stats = Stats(
+        self.s_player_stats = Stats(
             100 * math.tanh(0.01 * total_item_stats.strength),
             math.tanh(0.01 * total_item_stats.agility),
             0.6 * math.tanh(0.01 * total_item_stats.expertise),
             math.tanh(0.01 * total_item_stats.resistance),
             100 * math.tanh(0.01 * total_item_stats.life))
         
-        return self.player_stats
+        return self.s_player_stats
     
     def height_modifiers(self):
         # Check for None as modifiers could be 0
-        if self.attack_mod is not None and self.defense_mod is not None:
-            return (self.attack_mod, self.defense_mod)
+        if self.s_attack_mod is not None and self.s_defense_mod is not None:
+            return (self.s_attack_mod, self.s_defense_mod)
     
         # Calculate height modifiers
-        self.attack_mod = 0.7 - math.pow(3 * self.height - 5, 4) + math.pow(3 * self.height - 5, 2) + self.height / 4
-        self.defense_mod = 1.9 + math.pow(2.5 * self.height - 4.16, 4) - math.pow(2.5 * self.height - 4.16, 2) - 3 * self.height / 10
+        self.s_attack_mod = 0.7 - math.pow(3 * self.height - 5, 4) + math.pow(3 * self.height - 5, 2) + self.height / 4
+        self.s_defense_mod = 1.9 + math.pow(2.5 * self.height - 4.16, 4) - math.pow(2.5 * self.height - 4.16, 2) - 3 * self.height / 10
 
-        return (self.attack_mod, self.defense_mod)
+        return (self.s_attack_mod, self.s_defense_mod)
     
     def final_stats(self):
         # Check for None as final stats could be 0
-        if self.attack is not None and self.defense is not None:
-            return (self.attack, self.defense)
+        if self.s_attack is not None and self.s_defense is not None:
+            return (self.s_attack, self.s_defense)
     
         # Set player stats if not done before
         self.player_stats()
         # Set height modifiers if not done before
         self.height_modifiers()
 
-        self.attack = (self.player_stats.agility + self.player_stats.expertise) * self.player_stats.strength * self.attack_mod
-        self.defense = (self.player_stats.resistance + self.player_stats.expertise) * self.player_stats.life * self.defense_mod
+        self.s_attack = (self.s_player_stats.agility + self.s_player_stats.expertise) * self.s_player_stats.strength * self.s_attack_mod
+        self.s_defense = (self.s_player_stats.resistance + self.s_player_stats.expertise) * self.s_player_stats.life * self.s_defense_mod
 
-        return (self.attack, self.defense)
+        return (self.s_attack, self.s_defense)
     
     def fitness(self):
         # Check for None as fitness could be 0
@@ -182,7 +188,7 @@ class Player(object):
         # Set final stats if not done before
         self.final_stats()
 
-        self.s_fitness = self.player_class(self.attack, self.defense)
+        self.s_fitness = self.player_class(self.s_attack, self.s_defense)
 
         return self.s_fitness
 
