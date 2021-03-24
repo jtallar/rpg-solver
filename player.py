@@ -18,11 +18,11 @@ class PlayerClass(enum.Enum):
     Infiltrado = ClassType(0.8, 0.3).fitness
 
 class EquipmentType(enum.Enum):
-    Weapon = "\U0001F3F9"
-    Boots = "\U0001FA74"
-    Helmet = "\U0001FA96"
-    Gloves = "\U0001F9E4"
-    Armor = "\U0001F9BA"
+    Weapon = "🏹"
+    Boots = "🥾"
+    Helmet = "⛑"
+    Gloves = "🧤"
+    Armor = "🦺"
 
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
@@ -30,15 +30,15 @@ class Stats(object):
 
         Parameters
         ----------
-        strength : double
+        strength : float
             Equipment stat value
-        agility : double
+        agility : float
             Equipment stat value
-        expertise : double
+        expertise : float
             Equipment stat value
-        resistance : double
+        resistance : float
             Equipment stat value
-        life : double
+        life : float
             Equipment stat value
         """
 
@@ -79,6 +79,27 @@ class Equipment(object):
         self.id = id
         self.stats = stats
 
+    @classmethod
+    def new_from_row(cls, equipment_type, row):
+        """Returns an Equipment object with the given row
+
+        Parameters
+        ----------
+        equipment_type : EquipmentType
+            Type of equipment
+        row : list of strings
+            Row from tsv. Expected order is ['id', 'Fu', 'Ag', 'Ex', 'Re', 'Vi']
+        """
+        return cls(equipment_type, int(row[0]), Stats(
+            float(row[1]), float(row[2]), float(row[3]), float(row[4]), float(row[5])
+        ))
+    
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return "Equipment{type=%s,id=%s,%s}" % (self.equipment_type.value, self.id, self.stats)
+
 class Player(object):
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
@@ -87,7 +108,7 @@ class Player(object):
         ----------
         player_class : PlayerClass
             Type of player
-        height : double
+        height : float
             Player height
         weapon : Equipment
             Player equipped weapon

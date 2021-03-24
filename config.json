@@ -1,4 +1,11 @@
 {
+	"armas_file": "dataset/armas.tsv",
+	"botas_file": "dataset/botas.tsv",
+	"cascos_file": "dataset/cascos.tsv",
+	"guantes_file": "dataset/guantes.tsv",
+	"pecheras_file": "dataset/pecheras.tsv",
+	"max_rows_tsv": 10,
+
 	"level": "levels/level_soko04.txt",
 	"algorithm": "GGS",
 	"max_depth": 1000000,
