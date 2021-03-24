@@ -31,6 +31,7 @@ with open("config.json") as file:
     config = json.load(file)
 
 # Parse each TSV to get List of possible value for each equipment type
+# Number of lines per file limited by max_rows config
 max_rows = config["max_rows_tsv"]
 weapon_list = read_equipment_tsv(config["armas_file"], obj.EquipmentType.Weapon, max_rows)
 boots_list = read_equipment_tsv(config["botas_file"], obj.EquipmentType.Boots, max_rows)
