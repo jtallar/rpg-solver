@@ -216,8 +216,20 @@ class Player(object):
 
         return self.s_fitness
 
+    def __lt__(self, other):
+        # Set self and other fitness if not done before
+        self.fitness()
+        other.fitness()
+        return self.s_fitness < other.s_fitness
+        
     def genes(self):
         return [self.height, self.weapon, self.boots, self.helmet, self.gloves, self.armor]
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return "Player(fitness=%s)" % (self.s_fitness)
 
     def update(self, genes):
         self.height = genes[0]

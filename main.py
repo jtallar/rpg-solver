@@ -7,6 +7,8 @@ import csv, itertools
 import random
 import functions as fn
 
+import selectors as sel
+
 # Define signal handler for Ctrl+C for ordered interrupt
 def signal_handler(sig, frame):
     # TODO: Change this to corresponding function calls
@@ -56,7 +58,14 @@ Armor = armor_list[random.randint(0, len(armor_list) - 1)]
 
 # print(Weapon, Boots, Helmet, Gloves, Armor)
 
-player = obj.Player(obj.PlayerClass.Arquero, 1.0, Weapon, Boots, Helmet, Gloves, Armor)
+player = obj.Player(obj.PlayerClass.Arquero, 1.3, Weapon, Boots, Helmet, Gloves, Armor)
+player2 = obj.Player(obj.PlayerClass.Arquero, 2.0, Weapon, Boots, Helmet, Gloves, Armor)
+arr = [player, player2]
+for index, el in enumerate(arr):
+    el.fitness_prime = 12 - el.fitness()
+print(player.fitness(), player2.fitness())
+
+print(sel.Selector.probabilistic_tournament_selector(2, arr, 0.75))
 
 player.player_stats()
 # print(player.fitness(), time.time() - start_time)
