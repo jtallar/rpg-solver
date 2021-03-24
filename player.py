@@ -80,6 +80,9 @@ class Equipment(object):
         self.stats = stats
 
 class Player(object):
+
+    n_genes = 6
+
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
 
