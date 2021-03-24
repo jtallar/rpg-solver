@@ -47,7 +47,7 @@ gloves_list = read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Glove
 armor_list = read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
 
 end_time = time.time()
-# print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
+print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
 Weapon = weapon_list[random.randint(0, len(weapon_list) - 1)]
@@ -63,11 +63,11 @@ player2 = obj.Player(obj.PlayerClass.Arquero, 2.0, Weapon, Boots, Helmet, Gloves
 arr = [player, player2]
 for index, el in enumerate(arr):
     el.fitness_prime = 12 - el.fitness()
-print(player.fitness(), player2.fitness())
+# print(player.fitness(), player2.fitness())
 
-print(sel.Selector.probabilistic_tournament_selector(2, arr, 0.75))
+# print(sel.Selector.probabilistic_tournament_selector(2, arr, 0.75))
 
-player.player_stats()
+# player.player_stats()
 # print(player.fitness(), time.time() - start_time)
 start_time = time.time()
 # print(player.fitness(), time.time() - start_time)
