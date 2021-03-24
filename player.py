@@ -18,11 +18,11 @@ class PlayerClass(enum.Enum):
     Infiltrado = ClassType(0.8, 0.3).fitness
 
 class EquipmentType(enum.Enum):
-    Weapon = "\U0001F3F9"
-    Boots = "\U0001FA74"
-    Helmet = "\U0001FA96"
-    Gloves = "\U0001F9E4"
-    Armor = "\U0001F9BA"
+    Weapon = "🗡️"
+    Boots = "🥾"
+    Helmet = "⛑️"
+    Gloves = "🧤"
+    Armor = "🛡️"
 
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
@@ -78,6 +78,12 @@ class Equipment(object):
         self.equipment_type = equipment_type
         self.id = id
         self.stats = stats
+
+    def __str__(self):
+        return self.__repr__()
+    def __repr__(self):
+        return "%s %s " % (self.id,self.equipment_type.value)
+
 
 class Player(object):
 
@@ -195,3 +201,5 @@ class Player(object):
 
         return self.s_fitness
 
+    def genes(self):
+        return [self.height, self.weapon, self.boots, self.helmet, self.gloves, self.armor]

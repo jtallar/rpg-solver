@@ -1,65 +1,92 @@
+import random
+import math
+
 class Crossover:
     
     @staticmethod
-    def one_point():
-        return
+    def one_point(player_one, player_two):
+        s = random.randint(0,player_one.n_genes-1)
+        print(s)
+        h1, h2 = player_one.genes(), player_two.genes()
+        for i in range(s,player_one.n_genes):
+            h1[i], h2[i] = h2[i], h1[i]
+        return h1, h2
     
     @staticmethod
-    def two_points():
-        return
+    def two_points(player_one, player_two):             # TODO: check swap range
+        p1 = random.randint(0,player_one.n_genes-1)
+        p2 = random.randint(0,player_one.n_genes-1)
+        while p1==p2: p2 = random.randint(0,player_one.n_genes-1)
+        if p1>p2: p1,p2=p2,p1
+        print(p1,p2)
+        h1, h2 = player_one.genes(), player_two.genes()
+        for i in range(p1,p2):
+            h1[i], h2[i] = h2[i], h1[i]
+        return h1, h2
 
     @staticmethod
-    def ring():
-        return
+    def ring(player_one, player_two):
+        s = player_one.n_genes
+        p = random.randint(0, s-1)
+        l = random.randint(0, math.ceil(s/2))
+        print(p,l)
+        h1, h2 = player_one.genes(), player_two.genes()
+        for i in range(p,p+l):
+            h1[i%s], h2[i%s] = h2[i%s], h1[i%s]
+        return h1, h2
     
     @staticmethod
-    def uniform():
-        return
+    def uniform(player_one, player_two):
+        h1, h2 = player_one.genes(), player_two.genes()
+        for i in range(0,player_one.n_genes):
+            if random.choice([True, False]):
+                h1[i], h2[i] = h2[i], h1[i]
+        return h1, h2
 
 
 class Mutation:
 
     @staticmethod
-    def gene():
+    def gene(player):
         return
     
     @staticmethod
-    def limit_multi():
+    def limit_multi(player):
         return
 
     @staticmethod
-    def uniform_multi():
+    def uniform_multi(player):
         return
     
     @staticmethod
-    def full():
+    def full(player):
         return
 
 
 class Selection:
 
     @staticmethod
-    def elite():
+    def elite(players):
+        return 
+
+    @staticmethod
+    def roulette(players):
         return
 
     @staticmethod
-    def roulette():
+    def universal(players):
         return
 
     @staticmethod
-    def universal():
-        return
-
-    @staticmethod
-    def boltzmann():
+    def boltzmann(players):
         return
     
     @staticmethod
-    def tournement():
+    def tournement(players):
         return
     
     @staticmethod
-    def ranking():
+    def ranking(players):
         return
 
 class Stop(object):
