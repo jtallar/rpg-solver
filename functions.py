@@ -54,6 +54,7 @@ class Mutation(object):
         self.gloves_list = gloves_list
         self.armor_list = armor_list
         self.map = [weapon_list, boots_list, helmet_list, gloves_list, armor_list]
+        self.M = 6
 
     def mutate(self, player):
         pass
@@ -93,7 +94,7 @@ class MultiLimited(Mutation):
 
     def mutate(self, player):
         if self.rand_pm(self.pm):
-            qty = random.randint(0,player.n_genes-1)
+            qty = random.randint(1,self.M)
             changes = random.sample(range(0,player.n_genes-1),qty)
             print('\n',changes,'\n')
             player_genes = player.genes()
