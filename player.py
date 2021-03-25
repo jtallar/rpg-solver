@@ -5,24 +5,37 @@ import math
 # Use eg: player.PlayerClass.Arquero(10, 20)
 class PlayerClass(enum.Enum):
     class ClassType(object):
-        def __init__(self, attack_mult, defense_mult):
+        def __init__(self, attack_mult, defense_mult, emoji):
             self.attack_mult = attack_mult
             self.defense_mult = defense_mult
+            self.emoji = emoji
         
         def fitness(self, attack, defense):
             return self.attack_mult * attack + self.defense_mult * defense
+        
+        def __str__(self):
+            return self.__repr__()
+
+        def __repr__(self):
+            return "PlayerClass(%s)" % (self.emoji)
             
-    Guerrero = ClassType(0.6, 0.6).fitness
-    Arquero = ClassType(0.9, 0.1).fitness
-    Defensor = ClassType(0.3, 0.8).fitness
-    Infiltrado = ClassType(0.8, 0.3).fitness
+    Guerrero = ClassType(0.6, 0.6, "🗡️")
+    Arquero = ClassType(0.9, 0.1, "🏹")
+    Defensor = ClassType(0.3, 0.8, "🛡️")
+    Infiltrado = ClassType(0.8, 0.3, "🕵")
+
+    def fitness(self, attack, defense):
+        return self.value.fitness(attack, defense)
+
+    def __str__(self):
+        return self.value.__str__()
 
 class EquipmentType(enum.Enum):
-    Weapon = "🗡️"
+    Weapon = "🥊"
     Boots = "🥾"
     Helmet = "⛑️"
     Gloves = "🧤"
-    Armor = "🛡️"
+    Armor = "🥋"
 
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
@@ -235,7 +248,7 @@ class Player(object):
         # Set final stats if not done before
         self.final_stats()
 
-        self.s_fitness = self.player_class(self.s_attack, self.s_defense)
+        self.s_fitness = self.player_class.fitness(self.s_attack, self.s_defense)
 
         return self.s_fitness
 
@@ -259,7 +272,7 @@ class Player(object):
         return self.__repr__()
 
     def __repr__(self):
-        return "Player(fitness=%s)" % (self.s_fitness)
+        return "Player(Class=%s,height=%s,fitness=%s)" % (self.player_class, self.height, self.s_fitness)
 
     def update(self, genes):
         self.height = genes[self.HEIGHT_POS]
