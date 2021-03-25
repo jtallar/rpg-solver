@@ -1,8 +1,16 @@
 import csv, itertools
 import random
+import sys
 import player as obj
 
 (min_height, max_height) = (1.3, 2.0)
+
+def read_config_param(config, param_name, converter_fun, invalid_fun):
+    param = converter_fun(config[param_name])
+    if invalid_fun(param):
+        print(f'Invalid {param_name}!')
+        sys.exit(1)
+    return param
 
 def read_equipment_tsv(filename, equipment_type, max_rows):
     with open(filename) as file:
