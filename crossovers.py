@@ -1,6 +1,6 @@
 import random
 import math
-import player as obj
+import player as ply
 
 class Crossover:
     # In every method, we asume both player_classes are the same
@@ -14,7 +14,7 @@ class Crossover:
         h1, h2 = player_one.genes(), player_two.genes()
         for i in range(p,player_one.n_genes):
             h1[i], h2[i] = h2[i], h1[i]
-        return [obj.Player.new_from_array(player_one.player_class, h1), obj.Player.new_from_array(player_one.player_class, h2)]
+        return [ply.Player.new_from_array(player_one.player_class, h1), ply.Player.new_from_array(player_one.player_class, h2)]
     
     @staticmethod
     def two_points(player_one, player_two):
@@ -24,7 +24,7 @@ class Crossover:
         h1, h2 = player_one.genes(), player_two.genes()
         for i in range(p1,p2):
             h1[i], h2[i] = h2[i], h1[i]
-        return [obj.Player.new_from_array(player_one.player_class, h1), obj.Player.new_from_array(player_one.player_class, h2)]
+        return [ply.Player.new_from_array(player_one.player_class, h1), ply.Player.new_from_array(player_one.player_class, h2)]
 
     @staticmethod
     def ring(player_one, player_two):
@@ -34,7 +34,7 @@ class Crossover:
         h1, h2 = player_one.genes(), player_two.genes()
         for i in range(p,p+l):
             h1[i%s], h2[i%s] = h2[i%s], h1[i%s]
-        return [obj.Player.new_from_array(player_one.player_class, h1), obj.Player.new_from_array(player_one.player_class, h2)]
+        return [ply.Player.new_from_array(player_one.player_class, h1), ply.Player.new_from_array(player_one.player_class, h2)]
     
     @staticmethod
     def uniform(player_one, player_two):
@@ -42,5 +42,5 @@ class Crossover:
         for i in range(0,player_one.n_genes):
             if random.choice([True, False]):
                 h1[i], h2[i] = h2[i], h1[i]
-        return [obj.Player.new_from_array(player_one.player_class, h1), obj.Player.new_from_array(player_one.player_class, h2)]
+        return [ply.Player.new_from_array(player_one.player_class, h1), ply.Player.new_from_array(player_one.player_class, h2)]
 

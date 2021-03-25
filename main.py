@@ -4,7 +4,7 @@ import sys
 import signal
 
 import utils
-import player as obj
+import player as ply
 import mutations as mut
 import selectors as sel
 import crossovers as cros
@@ -61,7 +61,7 @@ mutation_probability = utils.read_config_param(
 # If mutation is multi_limited, read M value
 if mutation_instance_name == 'multi_limited':
     limited_multigen_m = utils.read_config_param(
-        config, "limited_multigen_m", lambda el : int(el), lambda el : el < 1 or el > obj.Player.n_genes)
+        config, "limited_multigen_m", lambda el : int(el), lambda el : el < 1 or el > ply.Player.n_genes)
 # Selector functions
 selector_dic = {
     'elite': sel.Selector.elite_selector, 
@@ -112,18 +112,18 @@ print(f'Load Configuration \t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
 # Parse each TSV to get List of possible value for each equipment type
-weapon_list = utils.read_equipment_tsv(config["armas_file"], obj.EquipmentType.Weapon, max_rows)
-boots_list = utils.read_equipment_tsv(config["botas_file"], obj.EquipmentType.Boots, max_rows)
-helmet_list = utils.read_equipment_tsv(config["cascos_file"], obj.EquipmentType.Helmet, max_rows)
-gloves_list = utils.read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Gloves, max_rows)
-armor_list = utils.read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
+weapon_list = utils.read_equipment_tsv(config["armas_file"], ply.EquipmentType.Weapon, max_rows)
+boots_list = utils.read_equipment_tsv(config["botas_file"], ply.EquipmentType.Boots, max_rows)
+helmet_list = utils.read_equipment_tsv(config["cascos_file"], ply.EquipmentType.Helmet, max_rows)
+gloves_list = utils.read_equipment_tsv(config["guantes_file"], ply.EquipmentType.Gloves, max_rows)
+armor_list = utils.read_equipment_tsv(config["pecheras_file"], ply.EquipmentType.Armor, max_rows)
 
 end_time = time.time()
 print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
 base_generation = utils.generate_players(
-    10, obj.PlayerClass.Arquero, 
+    10, ply.PlayerClass.Arquero, 
     weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
 print(base_generation)
