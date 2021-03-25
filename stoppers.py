@@ -42,7 +42,7 @@ class StructuralStopper(Stopper):
         aux = 0
         for player in algo.player_collection:
             if not player.mutated: aux += 1     # ASUMIENDO QUE IMPLEMENTO ESE BOOLEAN
-        if aux >= self.r:
+        if (aux/self.n) >= self.r:
             self.accum += 1
         return self.accum >= self.n
 
@@ -52,15 +52,15 @@ class ContentStopper(Stopper):
         super().__init__(generation_count)
         self.max = max_count
         self.last_best = self.best_fitness(algo)
-        self.equal_count = 0
+        self.accum = 0
     
     def is_algorithm_over(self, algo):
         best_player = self.best_fitness(algo)
-        if(not best_player.mutated):   # y es el mismo que last_best
-            self.equal_count += 1
+        if(not best_player.mutated):            # y es el mismo que last_best
+            self.accum += 1
         else:
-            self.equal_count=0
-        return self.equal_count >= self.max
+            self.accum = 0
+        return self.accum >= self.max
 
 
     def best_fitness(self, algo):

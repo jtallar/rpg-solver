@@ -48,7 +48,7 @@ class SimpleGen(Mutation):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
     def mutate(self, player):
-        if random.random() < self.Pm:
+        if random.random() < self.pm:
             gene = random.randint(0,player.n_genes-1)
             player_genes = player.genes()
             if gene == 0:
@@ -63,7 +63,7 @@ class MultiLimited(Mutation):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
     def mutate(self, player):
-        if random.random() < self.Pm:
+        if random.random() < self.pm:
             qty = random.randint(1,self.M)
             changes = random.sample(range(0,player.n_genes),qty)
             player_genes = player.genes()
@@ -82,7 +82,7 @@ class MultiUniform(Mutation):
     def mutate(self, player):
         player_genes = player.genes()
         for gene_i in range(0,player.n_genes):
-            if random.random() < self.Pm:
+            if random.random() < self.pm:
                 if gene_i == 0:
                     player_genes[gene_i] = random.uniform(min_height,max_height)
                 else:
@@ -95,7 +95,7 @@ class Full(Mutation):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
     def mutate(self, player):
-        if random.random() < self.Pm:
+        if random.random() < self.pm:
             player_genes = player.genes()
             for gene_i in range(0,player.n_genes):
                 if gene_i == 0:
