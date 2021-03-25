@@ -103,6 +103,8 @@ class Equipment(object):
 class Player(object):
 
     n_genes = 6
+    HEIGHT_POS, WEAPON_POS, BOOTS_POS = 0, 1, 2
+    HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
@@ -158,6 +160,27 @@ class Player(object):
         self.s_defense = None
         self.s_fitness = None
     
+    @classmethod
+    def new_from_array(cls, player_class, gene_array):
+        """Returns a Player object with the given genes
+
+        Parameters
+        ----------
+        player_class : PlayerClass
+            Type of player
+        gene_array : list of genes
+            Array of genes. Expected order is [height, weapon, boots, helmet, gloves, armor]
+        """
+        # height, weapon, boots, helmet, gloves, armor):
+        return cls(
+            player_class, 
+            gene_array[cls.HEIGHT_POS], 
+            gene_array[cls.WEAPON_POS], 
+            gene_array[cls.BOOTS_POS], 
+            gene_array[cls.HELMET_POS], 
+            gene_array[cls.GLOVES_POS], 
+            gene_array[cls.ARMOR_POS])
+
     def player_stats(self):
         # Player Stats is an object, no need to add is not None to condition
         if self.s_player_stats:
@@ -223,7 +246,14 @@ class Player(object):
         return self.s_fitness < other.s_fitness
         
     def genes(self):
-        return [self.height, self.weapon, self.boots, self.helmet, self.gloves, self.armor]
+        genes = [None] * self.n_genes
+        genes[self.HEIGHT_POS] = self.height
+        genes[self.WEAPON_POS] = self.weapon
+        genes[self.BOOTS_POS] = self.boots
+        genes[self.HELMET_POS] = self.helmet
+        genes[self.GLOVES_POS] = self.gloves
+        genes[self.ARMOR_POS] = self.armor
+        return genes
 
     def __str__(self):
         return self.__repr__()
@@ -232,9 +262,9 @@ class Player(object):
         return "Player(fitness=%s)" % (self.s_fitness)
 
     def update(self, genes):
-        self.height = genes[0]
-        self.weapon = genes[1]
-        self.boots = genes[2]
-        self.helmet = genes[3]
-        self.gloves = genes[4]
-        self.armor = genes[5]
+        self.height = genes[self.HEIGHT_POS]
+        self.weapon = genes[self.WEAPON_POS]
+        self.boots = genes[self.BOOTS_POS]
+        self.helmet = genes[self.HELMET_POS]
+        self.gloves = genes[self.GLOVES_POS]
+        self.armor = genes[self.ARMOR_POS]
