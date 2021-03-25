@@ -4,6 +4,9 @@ import player as obj
 
 class Crossover:
     # In every method, we asume both player_classes are the same
+    # TODO: Check si en one_point y two_points los p pueden ser S
+    #       En el one_point, esto da la chance de que los hijos sean igual a los padres
+    #       En el two_points, permitiria que se swapee desde P1 hasta el final (sino imposible)
     
     @staticmethod
     def one_point(player_one, player_two):
