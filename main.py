@@ -5,7 +5,7 @@ import sys
 import signal
 import csv, itertools
 import random
-import functions as fn
+import mutations as mut
 
 import selectors as sel
 
@@ -72,7 +72,7 @@ for index, el in enumerate(arr):
 start_time = time.time()
 # print(player.fitness(), time.time() - start_time)
 # print(player.genes(), '\n')
-# print(fn.SimpleGen(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(fn.MultiLimited(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(fn.MultiUniform(0.5, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(fn.Full(1, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(mut.SimpleGen(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(mut.MultiLimited(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(mut.MultiUniform(0.5, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+# print(mut.Full(1, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
