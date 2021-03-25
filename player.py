@@ -2,7 +2,7 @@ import enum
 import math
 
 # Possible player classes
-# Use eg: player.PlayerClass.Arquero(10, 20)
+# Use eg: player.PlayerClass.Arquero.fitness(10, 20)
 class PlayerClass(enum.Enum):
     class ClassType(object):
         def __init__(self, attack_mult, defense_mult, emoji):
