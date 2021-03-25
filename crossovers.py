@@ -7,17 +7,16 @@ class Crossover:
     
     @staticmethod
     def one_point(player_one, player_two):
-        s = random.randint(0,player_one.n_genes-1)
+        p = random.randint(0,player_one.n_genes)
         h1, h2 = player_one.genes(), player_two.genes()
-        for i in range(s,player_one.n_genes):
+        for i in range(p,player_one.n_genes):
             h1[i], h2[i] = h2[i], h1[i]
         return [obj.Player.new_from_array(player_one.player_class, h1), obj.Player.new_from_array(player_one.player_class, h2)]
     
     @staticmethod
-    def two_points(player_one, player_two):             # TODO: check swap range
-        p1 = random.randint(0,player_one.n_genes-1)
-        p2 = random.randint(0,player_one.n_genes-1)
-        while p1==p2: p2 = random.randint(0,player_one.n_genes-1)
+    def two_points(player_one, player_two):
+        p1 = random.randint(0,player_one.n_genes)
+        p2 = random.randint(0,player_one.n_genes)
         if p1>p2: p1,p2=p2,p1
         h1, h2 = player_one.genes(), player_two.genes()
         for i in range(p1,p2):
