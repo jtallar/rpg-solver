@@ -80,11 +80,8 @@ class MultiUniform(Mutation):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
     def mutate(self, player):
-        qty = random.randint(0,player.n_genes-1)
-        changes = random.sample(range(0,player.n_genes-1),qty)
         player_genes = player.genes()
-        # TODO: La iteracion no es in range(0,player.n_genes)?
-        for gene_i in changes:
+        for gene_i in range(0,player.n_genes):
             if random.random() < self.Pm:
                 if gene_i == 0:
                     player_genes[gene_i] = random.uniform(min_height,max_height)
