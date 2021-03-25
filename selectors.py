@@ -136,4 +136,35 @@ class Selector(object):
 
         return selected
 
+class CombinedSelector(object):
+    def __init__(self, method_1, method_2, percentage_m1):
+        """Returns a Combined Selector object with given methods
+        
+        Parameters
+        ----------
+        method1 : function
+            Class method reference from Selector class
+        method2 : function
+            Class method reference from Selector class
+        percentage_m1 : float e [0;1]
+            Percentage of selections to take from method 1.
+        """
+        self.method_1 = method_1
+        self.method_2 = method_2
+        self.percentage_m1 = percentage_m1
+    
+    def get_count(self, count, collection, param_m1=None, param_m2=None):
+        # Take percentage_m1 * count from method 1 and (1 - percentage_m1) from methodd 2
+        # param_m1 or param_m2 might be 0, check with is not None
+        first_sel = second_sel = []
+        count_m1 = round(count * self.percentage_m1)
+        count_m2 = count - count_m1
+
+        # Skip a method if its count is 0
+        if count_m1:
+            first_sel = self.method_1(count_m1, collection, param_m1) if param_m1 is not None else self.method_1(count_m1, collection)
+        if count_m2:
+            second_sel = self.method_2(count_m2, collection, param_m2) if param_m2 is not None else self.method_2(count_m2, collection)
+
+        return first_sel.extend(second_sel)
 

@@ -2,27 +2,40 @@ import enum
 import math
 
 # Possible player classes
-# Use eg: player.PlayerClass.Arquero(10, 20)
+# Use eg: player.PlayerClass.Arquero.fitness(10, 20)
 class PlayerClass(enum.Enum):
     class ClassType(object):
-        def __init__(self, attack_mult, defense_mult):
+        def __init__(self, attack_mult, defense_mult, emoji):
             self.attack_mult = attack_mult
             self.defense_mult = defense_mult
+            self.emoji = emoji
         
         def fitness(self, attack, defense):
             return self.attack_mult * attack + self.defense_mult * defense
+        
+        def __str__(self):
+            return self.__repr__()
+
+        def __repr__(self):
+            return "PlayerClass(%s)" % (self.emoji)
             
-    Guerrero = ClassType(0.6, 0.6).fitness
-    Arquero = ClassType(0.9, 0.1).fitness
-    Defensor = ClassType(0.3, 0.8).fitness
-    Infiltrado = ClassType(0.8, 0.3).fitness
+    Guerrero = ClassType(0.6, 0.6, "🗡️")
+    Arquero = ClassType(0.9, 0.1, "🏹")
+    Defensor = ClassType(0.3, 0.8, "🛡️")
+    Infiltrado = ClassType(0.8, 0.3, "🕵")
+
+    def fitness(self, attack, defense):
+        return self.value.fitness(attack, defense)
+
+    def __str__(self):
+        return self.value.__str__()
 
 class EquipmentType(enum.Enum):
-    Weapon = "🗡️"
+    Weapon = "🥊"
     Boots = "🥾"
     Helmet = "⛑️"
     Gloves = "🧤"
-    Armor = "🛡️"
+    Armor = "🥋"
 
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
@@ -103,6 +116,8 @@ class Equipment(object):
 class Player(object):
 
     n_genes = 6
+    HEIGHT_POS, WEAPON_POS, BOOTS_POS = 0, 1, 2
+    HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
@@ -158,6 +173,27 @@ class Player(object):
         self.s_defense = None
         self.s_fitness = None
     
+    @classmethod
+    def new_from_array(cls, player_class, gene_array):
+        """Returns a Player object with the given genes
+
+        Parameters
+        ----------
+        player_class : PlayerClass
+            Type of player
+        gene_array : list of genes
+            Array of genes. Expected order is [height, weapon, boots, helmet, gloves, armor]
+        """
+        # height, weapon, boots, helmet, gloves, armor):
+        return cls(
+            player_class, 
+            gene_array[cls.HEIGHT_POS], 
+            gene_array[cls.WEAPON_POS], 
+            gene_array[cls.BOOTS_POS], 
+            gene_array[cls.HELMET_POS], 
+            gene_array[cls.GLOVES_POS], 
+            gene_array[cls.ARMOR_POS])
+
     def player_stats(self):
         # Player Stats is an object, no need to add is not None to condition
         if self.s_player_stats:
@@ -212,7 +248,7 @@ class Player(object):
         # Set final stats if not done before
         self.final_stats()
 
-        self.s_fitness = self.player_class(self.s_attack, self.s_defense)
+        self.s_fitness = self.player_class.fitness(self.s_attack, self.s_defense)
 
         return self.s_fitness
 
@@ -223,18 +259,25 @@ class Player(object):
         return self.s_fitness < other.s_fitness
         
     def genes(self):
-        return [self.height, self.weapon, self.boots, self.helmet, self.gloves, self.armor]
+        genes = [None] * self.n_genes
+        genes[self.HEIGHT_POS] = self.height
+        genes[self.WEAPON_POS] = self.weapon
+        genes[self.BOOTS_POS] = self.boots
+        genes[self.HELMET_POS] = self.helmet
+        genes[self.GLOVES_POS] = self.gloves
+        genes[self.ARMOR_POS] = self.armor
+        return genes
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return "Player(fitness=%s)" % (self.s_fitness)
+        return "Player(Class=%s,height=%s,fitness=%s)" % (self.player_class, self.height, self.s_fitness)
 
     def update(self, genes):
-        self.height = genes[0]
-        self.weapon = genes[1]
-        self.boots = genes[2]
-        self.helmet = genes[3]
-        self.gloves = genes[4]
-        self.armor = genes[5]
+        self.height = genes[self.HEIGHT_POS]
+        self.weapon = genes[self.WEAPON_POS]
+        self.boots = genes[self.BOOTS_POS]
+        self.helmet = genes[self.HELMET_POS]
+        self.gloves = genes[self.GLOVES_POS]
+        self.armor = genes[self.ARMOR_POS]

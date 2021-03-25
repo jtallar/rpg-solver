@@ -1,13 +1,14 @@
-import player as obj
 import time
 import json
 import sys
 import signal
-import csv, itertools
-import random
-import functions as fn
 
+import utils
+import player as ply
+import mutations as mut
 import selectors as sel
+import crossovers as cros
+import stoppers as stp
 
 # Define signal handler for Ctrl+C for ordered interrupt
 def signal_handler(sig, frame):
@@ -21,58 +22,108 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-def read_equipment_tsv(filename, equipment_type, max_rows):
-    with open(filename) as file:
-        tsv_reader = csv.reader(file, delimiter="\t")
-        next(tsv_reader) # Skip header column
-        return [obj.Equipment.new_from_row(equipment_type, row) for row in itertools.islice(tsv_reader, max_rows)]
-
 start_time = time.time()
 
+# TODO: Ver si los nombres de las config tienen que ser si o si A, B, method1, etc o si podemos definirlas en el README
 # Read configurations from file
 with open("config.json") as file:
     config = json.load(file)
 
-# Parse each TSV to get List of possible value for each equipment type
+# Read params from config
 # Number of lines per file limited by max_rows config
-max_rows = int(config["max_rows_tsv"])
-if max_rows <= 0:
-    print("Invalid max rows!")
-    sys.exit(1)
-
-weapon_list = read_equipment_tsv(config["armas_file"], obj.EquipmentType.Weapon, max_rows)
-boots_list = read_equipment_tsv(config["botas_file"], obj.EquipmentType.Boots, max_rows)
-helmet_list = read_equipment_tsv(config["cascos_file"], obj.EquipmentType.Helmet, max_rows)
-gloves_list = read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Gloves, max_rows)
-armor_list = read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
+max_rows = utils.read_config_param(
+    config, "max_rows_tsv", lambda el : int(el), lambda el : el <= 0)
+# Population count
+N = utils.read_config_param(
+    config, "N", lambda el : int(el), lambda el : el <= 0)
+# Child count
+K = utils.read_config_param(
+    config, "K", lambda el : int(el), lambda el : el <= 0)
+# Crossover function
+crossover_dic = {
+    'one_point': cros.Crossover.one_point, 
+    'two_points': cros.Crossover.two_points, 
+    'ring': cros.Crossover.ring, 
+    'uniform': cros.Crossover.uniform}
+crossover_fun_name = utils.read_config_param(
+    config, "crossover", lambda el : el, lambda el : el not in crossover_dic)
+# Mutation function
+mutation_dic = {
+    'simple_gen': mut.SimpleGen, 
+    'multi_limited': mut.MultiLimited, 
+    'multi_uniform': mut.MultiUniform, 
+    'full': mut.Full}
+mutation_instance_name = utils.read_config_param(
+    config, "mutation", lambda el : el, lambda el : el not in mutation_dic)
+# Mutation probability
+mutation_probability = utils.read_config_param(
+    config, "mutation_probability", lambda el : float(el), lambda el : el < 0 or el > 1)
+# If mutation is multi_limited, read M value
+if mutation_instance_name == 'multi_limited':
+    limited_multigen_m = utils.read_config_param(
+        config, "limited_multigen_m", lambda el : int(el), lambda el : el < 1 or el > ply.Player.n_genes)
+# Selector functions
+selector_dic = {
+    'elite': sel.Selector.elite_selector, 
+    'roulette': sel.Selector.roulette_selector, 
+    'universal': sel.Selector.universal_selector, 
+    'ranking': sel.Selector.ranking_selector, 
+    'boltzmann': sel.Selector.boltzmann_selector, 
+    'deterministic_tournament': sel.Selector.deterministic_tournament_selector, 
+    'probabilistic_tournament': sel.Selector.probabilistic_tournament_selector}
+selector_m1_name = utils.read_config_param(
+    config, "selector_method_1", lambda el : el, lambda el : el not in selector_dic)
+selector_m2_name = utils.read_config_param(
+    config, "selector_method_2", lambda el : el, lambda el : el not in selector_dic)
+selector_m3_name = utils.read_config_param(
+    config, "selector_method_3", lambda el : el, lambda el : el not in selector_dic)
+selector_m4_name = utils.read_config_param(
+    config, "selector_method_4", lambda el : el, lambda el : el not in selector_dic)
+# Selector A and B percentages
+selector_A = utils.read_config_param(
+    config, "A", lambda el : float(el), lambda el : el < 0 or el > 1)
+selector_B = utils.read_config_param(
+    config, "B", lambda el : float(el), lambda el : el < 0 or el > 1)
+# Implementation method
+implementation_dic = {
+    'fill-all': True, 
+    'fill-parent': False}
+implementation_name = utils.read_config_param(
+    config, "implementation", lambda el : el, lambda el : el not in implementation_dic)
+# Stopper function
+stopper_dic = {
+    'time': stp.TimeStopper, 
+    'generation_count': stp.GenerationCountStopper, 
+    'acceptable_solution': stp.AcceptableSolutionStopper, 
+    'structural': stp.StructuralStopper,
+    'content': stp.ContentStopper}
+stopper_instance_name = utils.read_config_param(
+    config, "stopper", lambda el : el, lambda el : el not in stopper_dic)
+# Stopper n - first param
+stopper_n = utils.read_config_param(
+    config, "stopper_n", lambda el : float(el), lambda el : el <= 0)
+# If stopper is structural, read r value
+if stopper_instance_name == 'structural':
+    stopper_r = utils.read_config_param(
+        config, "stopper_r", lambda el : float(el), lambda el : el <= 0 or el > 1)
 
 end_time = time.time()
-# print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
+print(f'Load Configuration \t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
-Weapon = weapon_list[random.randint(0, len(weapon_list) - 1)]
-Boots = boots_list[random.randint(0, len(boots_list) - 1)]
-Helmet = helmet_list[random.randint(0, len(helmet_list) - 1)]
-Gloves = gloves_list[random.randint(0, len(gloves_list) - 1)]
-Armor = armor_list[random.randint(0, len(armor_list) - 1)]
+# Parse each TSV to get List of possible value for each equipment type
+weapon_list = utils.read_equipment_tsv(config["armas_file"], ply.EquipmentType.Weapon, max_rows)
+boots_list = utils.read_equipment_tsv(config["botas_file"], ply.EquipmentType.Boots, max_rows)
+helmet_list = utils.read_equipment_tsv(config["cascos_file"], ply.EquipmentType.Helmet, max_rows)
+gloves_list = utils.read_equipment_tsv(config["guantes_file"], ply.EquipmentType.Gloves, max_rows)
+armor_list = utils.read_equipment_tsv(config["pecheras_file"], ply.EquipmentType.Armor, max_rows)
 
-# print(Weapon, Boots, Helmet, Gloves, Armor)
+end_time = time.time()
+print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
+start_time = end_time
 
-player = obj.Player(obj.PlayerClass.Arquero, 1.3, Weapon, Boots, Helmet, Gloves, Armor)
-player2 = obj.Player(obj.PlayerClass.Arquero, 2.0, Weapon, Boots, Helmet, Gloves, Armor)
-arr = [player, player2]
-for index, el in enumerate(arr):
-    el.fitness_prime = 12 - el.fitness()
-print(player.fitness(), player2.fitness())
+base_generation = utils.generate_players(
+    10, ply.PlayerClass.Arquero, 
+    weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
-print(sel.Selector.probabilistic_tournament_selector(2, arr, 0.75))
-
-player.player_stats()
-# print(player.fitness(), time.time() - start_time)
-start_time = time.time()
-# print(player.fitness(), time.time() - start_time)
-# print(player.genes(), '\n')
-# print(fn.SimpleGen(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(fn.MultiLimited(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(fn.MultiUniform(0.5, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(fn.Full(1, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+print(base_generation)
