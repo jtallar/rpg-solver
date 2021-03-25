@@ -1,6 +1,4 @@
-import random
-
-(min_height, max_height) = (1.3, 2.0)
+import time
 
 class GeneticAlgorithmFunctions(object):
     def __init__(self, parent_selectors, replace_selectors, crossover_function, mutation_instance, stop_function):
@@ -13,10 +11,11 @@ class GeneticAlgorithmFunctions(object):
         replace_selectors : CombinedSelector
             Combined selector to use when selecting N players for next gen
         crossover_function : function
-
+            Function used to perform crossover between 2 parents, generating 2 childs
         mutation_instance : Mutation
-
+            Instance used to perform mutations on a player
         stop_function : function
+            Function used to determine when to stop iteration
         """
 
         self.parent_selectors = parent_selectors
@@ -42,23 +41,22 @@ class GeneticAlgorithm(object):
             If true, use fill_all. If false, use fill_parent
         """
 
-        self.base_gen_collection = base_gen_collection
-        self.son_count = son_count
+        self.player_collection = base_gen_collection
+        self.N = len(base_gen_collection)
+        self.K = son_count
         self.function_config = function_config
         self.fill_all = fill_all
-
-# TODO: Ver si este metodo hay que meterlo adentro de la clase
-def generate_players(count, player_class, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
-    players = []
-    for i in range(count):
-        player = obj.Player(
-            player_class,
-            random.uniform(min_height, max_height), 
-            weapon_list[random.randint(0, len(weapon_list) - 1)],
-            boots_list[random.randint(0, len(boots_list) - 1)], 
-            helmet_list[random.randint(0, len(helmet_list) - 1)], 
-            gloves_list[random.randint(0, len(gloves_list) - 1)], 
-            armor_list[random.randint(0, len(armor_list) - 1)])
-        players.append(player)
+        self.start_time = time.time()
+        self.generation_count = 0
     
-    return players
+    def is_algorithm_over(self):
+        pass
+
+    def iterate(self):
+        # Select K parents from player_collection
+
+        # Cross parents, generating K childs
+
+        # Mutate each child
+
+        # Select N from N (actual) + K (childs) to save new generation

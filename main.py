@@ -1,12 +1,11 @@
-import player as obj
 import time
 import json
 import sys
 import signal
-import csv, itertools
-import random
-import mutations as mut
 
+import utils
+import player as obj
+import mutations as mut
 import selectors as sel
 
 # Define signal handler for Ctrl+C for ordered interrupt
@@ -21,12 +20,6 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-def read_equipment_tsv(filename, equipment_type, max_rows):
-    with open(filename) as file:
-        tsv_reader = csv.reader(file, delimiter="\t")
-        next(tsv_reader) # Skip header column
-        return [obj.Equipment.new_from_row(equipment_type, row) for row in itertools.islice(tsv_reader, max_rows)]
-
 start_time = time.time()
 
 # Read configurations from file
@@ -40,39 +33,18 @@ if max_rows <= 0:
     sys.exit(1)
 
 # Parse each TSV to get List of possible value for each equipment type
-weapon_list = read_equipment_tsv(config["armas_file"], obj.EquipmentType.Weapon, max_rows)
-boots_list = read_equipment_tsv(config["botas_file"], obj.EquipmentType.Boots, max_rows)
-helmet_list = read_equipment_tsv(config["cascos_file"], obj.EquipmentType.Helmet, max_rows)
-gloves_list = read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Gloves, max_rows)
-armor_list = read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
+weapon_list = utils.read_equipment_tsv(config["armas_file"], obj.EquipmentType.Weapon, max_rows)
+boots_list = utils.read_equipment_tsv(config["botas_file"], obj.EquipmentType.Boots, max_rows)
+helmet_list = utils.read_equipment_tsv(config["cascos_file"], obj.EquipmentType.Helmet, max_rows)
+gloves_list = utils.read_equipment_tsv(config["guantes_file"], obj.EquipmentType.Gloves, max_rows)
+armor_list = utils.read_equipment_tsv(config["pecheras_file"], obj.EquipmentType.Armor, max_rows)
 
 end_time = time.time()
 print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
-Weapon = weapon_list[random.randint(0, len(weapon_list) - 1)]
-Boots = boots_list[random.randint(0, len(boots_list) - 1)]
-Helmet = helmet_list[random.randint(0, len(helmet_list) - 1)]
-Gloves = gloves_list[random.randint(0, len(gloves_list) - 1)]
-Armor = armor_list[random.randint(0, len(armor_list) - 1)]
+base_generation = utils.generate_players(
+    10, obj.PlayerClass.Arquero, 
+    weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
-# print(Weapon, Boots, Helmet, Gloves, Armor)
-
-player = obj.Player(obj.PlayerClass.Arquero, 1.3, Weapon, Boots, Helmet, Gloves, Armor)
-player2 = obj.Player(obj.PlayerClass.Arquero, 2.0, Weapon, Boots, Helmet, Gloves, Armor)
-arr = [player, player2]
-for index, el in enumerate(arr):
-    el.fitness_prime = 12 - el.fitness()
-# print(player.fitness(), player2.fitness())
-
-# print(sel.Selector.probabilistic_tournament_selector(2, arr, 0.75))
-
-# player.player_stats()
-# print(player.fitness(), time.time() - start_time)
-start_time = time.time()
-# print(player.fitness(), time.time() - start_time)
-# print(player.genes(), '\n')
-# print(mut.SimpleGen(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(mut.MultiLimited(0.8, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(mut.MultiUniform(0.5, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
-# print(mut.Full(1, weapon_list, boots_list, helmet_list, gloves_list, armor_list).mutate(player).genes())
+print(base_generation)
