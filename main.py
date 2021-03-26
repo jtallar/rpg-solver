@@ -73,13 +73,13 @@ if mutation_instance_name == 'multi_limited':
         config, "limited_multigen_m", lambda el : int(el), lambda el : el < 1 or el > ply.Player.n_genes)
 # Selector functions
 selector_dic = {
-    'elite': sel.Selector.elite_selector, 
-    'roulette': sel.Selector.roulette_selector, 
-    'universal': sel.Selector.universal_selector, 
-    'ranking': sel.Selector.ranking_selector, 
-    'boltzmann': sel.Selector.boltzmann_selector, 
-    'deterministic_tournament': sel.Selector.deterministic_tournament_selector, 
-    'probabilistic_tournament': sel.Selector.probabilistic_tournament_selector}
+    'elite': sel.EliteSelector, 
+    'roulette': sel.RouletteSelector, 
+    'universal': sel.UniversalSelector, 
+    'ranking': sel.RankingSelector, 
+    'boltzmann': sel.BoltzmannSelector, 
+    'deterministic_tournament': sel.DeterministicTournamentSelector, 
+    'probabilistic_tournament': sel.ProbabilisticTournamentSelector}
 selector_m1_name = utils.read_config_param(
     config, "selector_method_1", lambda el : el, lambda el : el not in selector_dic)
 selector_m2_name = utils.read_config_param(
@@ -88,6 +88,22 @@ selector_m3_name = utils.read_config_param(
     config, "selector_method_3", lambda el : el, lambda el : el not in selector_dic)
 selector_m4_name = utils.read_config_param(
     config, "selector_method_4", lambda el : el, lambda el : el not in selector_dic)
+selector_name_list = [selector_m1_name, selector_m2_name, selector_m3_name, selector_m4_name]
+# TODO: Check si hace falta que pueda combinar distintos boltzmann o tournaments (para distintos mi)
+# If any selector is deterministic_tournament, read M value
+if any(name == 'deterministic_tournament' for name in selector_name_list):
+    selector_det_m = utils.read_config_param(
+        config, "selector_det_tournament_m", lambda el : int(el), lambda el : el < 1 or el > N)
+# If any selector is probabilistic_tournament, read Threshold value
+if any(name == 'probabilistic_tournament' for name in selector_name_list):
+    selector_prob_th = utils.read_config_param(
+        config, "selector_prob_tournament_th", lambda el : float(el), lambda el : el < 0.5 or el > 1)
+# If any selector is boltzmann, read T0 and Tc
+if any(name == 'boltzmann' for name in selector_name_list):
+    selector_boltzmann_t0 = utils.read_config_param(
+        config, "selector_boltzmann_t0", lambda el : float(el), lambda el : el < 0)
+    selector_boltzmann_tc = utils.read_config_param(
+        config, "selector_boltzmann_tc", lambda el : float(el), lambda el : el < 0 or el > selector_boltzmann_t0)
 # Selector A and B percentages
 selector_A = utils.read_config_param(
     config, "A", lambda el : float(el), lambda el : el < 0 or el > 1)
@@ -139,13 +155,25 @@ base_generation = utils.generate_players(
 
 print("Generation 0\n", base_generation)
 
+selector_list = []
+for sel_name in selector_name_list:
+    if sel_name == 'deterministic_tournament':
+        selector = selector_dic[sel_name](selector_det_m)
+    elif sel_name == 'probabilistic_tournament':
+        selector = selector_dic[sel_name](selector_prob_th)
+    elif sel_name == 'boltzmann':
+        selector = selector_dic[sel_name](selector_boltzmann_t0, selector_boltzmann_tc)
+    else:
+        selector = selector_dic[sel_name]()
+    selector_list.append(selector)
+
 parent_selectors = sel.CombinedSelector(
-    selector_dic[selector_m1_name], 
-    selector_dic[selector_m2_name],
+    selector_list[0], 
+    selector_list[1],
     selector_A)
 replace_selectors = sel.CombinedSelector(
-    selector_dic[selector_m3_name], 
-    selector_dic[selector_m4_name],
+    selector_list[2], 
+    selector_list[3],
     selector_B)
 if stopper_instance_name == 'structural':
     stopper = stopper_dic[stopper_instance_name](stopper_n, stopper_r)

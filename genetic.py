@@ -56,9 +56,9 @@ class GeneticAlgorithm(object):
 
     def iterate(self):
         # Select K parents from player_collection
-        # TODO: Ver como pasar params para boltzmann, deterministic_tournament, probabilistic_tournament
+        # TODO: Check si le pasamos generation_count o time
         parent_collection = self.function_config.parent_selectors.get_count(
-            self.K, self.player_collection)
+            self.K, self.player_collection, self.generation_count)
 
         # Cross parents, generating K childs
         # TODO: Ver si hace falta aplicar cierto shuffle sobre parent_collection
