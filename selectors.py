@@ -166,5 +166,6 @@ class CombinedSelector(object):
         if count_m2:
             second_sel = self.method_2(count_m2, collection, param_m2) if param_m2 is not None else self.method_2(count_m2, collection)
 
-        return first_sel.extend(second_sel)
+        first_sel.extend(second_sel)
+        return first_sel
 
