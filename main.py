@@ -33,6 +33,14 @@ with open("config.json") as file:
 # Number of lines per file limited by max_rows config
 max_rows = utils.read_config_param(
     config, "max_rows_tsv", lambda el : int(el), lambda el : el <= 0)
+# Player class
+player_class_dic = {
+    'guerrero': ply.PlayerClass.Guerrero, 
+    'arquero': ply.PlayerClass.Arquero, 
+    'defensor': ply.PlayerClass.Defensor, 
+    'infiltrado': ply.PlayerClass.Infiltrado}
+player_class_name = utils.read_config_param(
+    config, "player_class", lambda el : el, lambda el : el not in player_class_dic)
 # Population count
 N = utils.read_config_param(
     config, "N", lambda el : int(el), lambda el : el <= 0)
@@ -123,7 +131,7 @@ print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
 base_generation = utils.generate_players(
-    10, ply.PlayerClass.Arquero, 
+    N, player_class_dic[player_class_name], 
     weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
 print(base_generation)

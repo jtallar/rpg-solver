@@ -8,7 +8,7 @@ import player as ply
 def read_config_param(config, param_name, converter_fun, invalid_fun):
     param = converter_fun(config[param_name])
     if invalid_fun(param):
-        print(f'Invalid {param_name}!')
+        print(f'Error in config. Invalid {param_name}!')
         sys.exit(1)
     return param
 

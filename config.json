@@ -5,6 +5,7 @@
 	"guantes_file": "dataset/guantes.tsv",
 	"pecheras_file": "dataset/pecheras.tsv",
 	"max_rows_tsv": 10,
+	"player_class": "guerrero",
 	"N": 10,
 	"K": 3,
 	"crossover": "one_point",

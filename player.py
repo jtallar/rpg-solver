@@ -19,10 +19,10 @@ class PlayerClass(enum.Enum):
         def __repr__(self):
             return "PlayerClass(%s)" % (self.emoji)
             
-    Guerrero = ClassType(0.6, 0.6, "🗡️")
-    Arquero = ClassType(0.9, 0.1, "🏹")
-    Defensor = ClassType(0.3, 0.8, "🛡️")
-    Infiltrado = ClassType(0.8, 0.3, "🕵")
+    Guerrero = ClassType(0.6, 0.6, "🗡️ ")
+    Arquero = ClassType(0.9, 0.1, "🏹 ")
+    Defensor = ClassType(0.3, 0.8, "🛡️ ")
+    Infiltrado = ClassType(0.8, 0.3, "🕵 ")
 
     def fitness(self, attack, defense):
         return self.value.fitness(attack, defense)
@@ -31,11 +31,11 @@ class PlayerClass(enum.Enum):
         return self.value.__str__()
 
 class EquipmentType(enum.Enum):
-    Weapon = "🥊"
-    Boots = "🥾"
-    Helmet = "⛑️"
-    Gloves = "🧤"
-    Armor = "🥋"
+    Weapon = "🥊 "
+    Boots = "🥾 "
+    Helmet = "⛑️ "
+    Gloves = "🧤 "
+    Armor = "🥋 "
 
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
