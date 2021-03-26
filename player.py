@@ -166,6 +166,9 @@ class Player(object):
 
         # Initialize stat saved values to None, will be calculated and stored on demand
         # TODO: Check si me sirve guardar todas, puedo sino guardar solo fitness
+        self.reset_saved_values()
+
+    def reset_saved_values(self):
         self.s_player_stats = None
         self.s_attack_mod = None
         self.s_defense_mod = None
@@ -272,7 +275,8 @@ class Player(object):
         return self.__repr__()
 
     def __repr__(self):
-        return "Player(Class=%s,height=%s,fitness=%s)" % (self.player_class, self.height, self.s_fitness)
+        # TODO: Change self.fitness() to self.s_fitness in production
+        return "Player(Class=%s,fitness=%s)" % (self.player_class, round(self.fitness(), 3))
 
     def update(self, genes):
         self.height = genes[self.HEIGHT_POS]
@@ -281,3 +285,4 @@ class Player(object):
         self.helmet = genes[self.HELMET_POS]
         self.gloves = genes[self.GLOVES_POS]
         self.armor = genes[self.ARMOR_POS]
+        self.reset_saved_values()
