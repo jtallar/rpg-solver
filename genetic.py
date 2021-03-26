@@ -1,7 +1,7 @@
 import time
 
 class AlgorithmFunctionsConfig(object):
-    def __init__(self, parent_selectors, replace_selectors, crossover_function, mutation_instance, stop_function):
+    def __init__(self, parent_selectors, replace_selectors, crossover_function, mutation_instance, stop_instance):
         """Returns a Genetic Algorithm Functions instance
         
         Parameters
@@ -14,7 +14,7 @@ class AlgorithmFunctionsConfig(object):
             Function used to perform crossover between 2 parents, generating 2 childs
         mutation_instance : Mutation
             Instance used to perform mutations on a player
-        stop_function : Stopper
+        stop_instance : Stopper
             Instance used to determine when to stop iteration
         """
 
@@ -22,7 +22,7 @@ class AlgorithmFunctionsConfig(object):
         self.replace_selectors = replace_selectors
         self.crossover_function = crossover_function
         self.mutation_instance = mutation_instance
-        self.stop_function = stop_function
+        self.stop_instance = stop_instance
 
 
 class GeneticAlgorithm(object):
@@ -50,14 +50,55 @@ class GeneticAlgorithm(object):
         self.generation_count = 0
     
     def is_algorithm_over(self):
-        pass
+        return self.function_config.stop_instance.is_algorithm_over(self)
 
     def iterate(self):
         # Select K parents from player_collection
+        # TODO: Ver como pasar params para boltzmann, deterministic_tournament, probabilistic_tournament
+        parent_collection = self.function_config.parent_selectors.get_count(
+            self.K, self.player_collection)
 
         # Cross parents, generating K childs
+        # TODO: Ver si hace falta aplicar cierto shuffle sobre parent_collection
+        child_collection = []
+        for i in range(0, self.K - 1, 2):
+            child_collection.extend(self.function_config.crossover_function(
+                parent_collection[i], parent_collection[i + 1]))
+        # TODO: Check this when K is odd
+        # If last parent remained unmatched, add it to child collection
+        if len(child_collection) != self.K:
+            child_collection.append(parent_collection[self.K - 1])
 
         # Mutate each child
+        for child in child_collection:
+            self.function_config.mutation_instance.mutate(child)
 
-        # Select N from N (actual) + K (childs) to save new generation
-        pass
+        # Choose N from N (actual) + K (childs) to save new generation
+        if self.fill_all:
+            self.player_collection = self.do_fill_all(child_collection)
+        else:
+            self.player_collection = self.do_fill_parent(child_collection)
+
+        self.generation_count += 1
+
+        return self.player_collection
+
+    def do_fill_all(self, child_collection):
+        # Select N from N (actual) + K (childs)
+        child_collection.extend(self.player_collection)
+        return self.function_config.replace_selectors.get_count(
+            self.N, child_collection
+        )
+    
+    def do_fill_parent(self, child_collection):
+        if self.K > self.N:
+            # Select N from K (childs)
+            return self.function_config.replace_selectors.get_count(
+                self.N, child_collection
+            )
+        # K <= N
+        # K childs + Select N-K from N (actual)
+        child_collection.extend(self.function_config.replace_selectors.get_count(
+            self.N - self.K, self.player_collection
+        ))
+        return child_collection
