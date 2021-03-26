@@ -46,8 +46,10 @@ class GeneticAlgorithm(object):
         self.K = son_count
         self.function_config = function_config
         self.fill_all = fill_all
+
         self.start_time = time.time()
         self.generation_count = 0
+        self.best_fit = max(self.player_collection)
     
     def is_algorithm_over(self):
         return self.function_config.stop_instance.is_algorithm_over(self)
@@ -79,7 +81,9 @@ class GeneticAlgorithm(object):
         else:
             self.player_collection = self.do_fill_parent(child_collection)
 
+        # Update general values
         self.generation_count += 1
+        self.best_fit = max(self.player_collection)
 
         return self.player_collection
 

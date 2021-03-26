@@ -137,7 +137,7 @@ base_generation = utils.generate_players(
     N, player_class_dic[player_class_name], 
     weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
-print(base_generation)
+print("Generation 0\n", base_generation)
 
 parent_selectors = sel.CombinedSelector(
     selector_dic[selector_m1_name], 
@@ -172,9 +172,10 @@ algo = gen.GeneticAlgorithm(
 
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
-    print(f'Generation {algo.generation_count}\n{curr_gen}')
+    # print(f'Generation {algo.generation_count}\n{curr_gen}')
 
 end_time = time.time()
 print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
 
 # TODO: Print results
+print(f'Best fit: {algo.best_fit}')
