@@ -9,6 +9,7 @@ import mutations as mut
 import selectors as sel
 import crossovers as cros
 import stoppers as stp
+import genetic as gen
 
 # Define signal handler for Ctrl+C for ordered interrupt
 def signal_handler(sig, frame):
@@ -128,10 +129,49 @@ armor_list = utils.read_equipment_tsv(config["pecheras_file"], ply.EquipmentType
 
 end_time = time.time()
 print(f'TSV Parsing \t\t ⏱  {round(end_time - start_time, 6)} seconds')
-start_time = end_time
 
+# TODO: Print config params
+
+# Create Generation 0
 base_generation = utils.generate_players(
     N, player_class_dic[player_class_name], 
     weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
-print(base_generation)
+parent_selectors = sel.CombinedSelector(
+    selector_dic[selector_m1_name], 
+    selector_dic[selector_m2_name],
+    selector_A)
+replace_selectors = sel.CombinedSelector(
+    selector_dic[selector_m3_name], 
+    selector_dic[selector_m4_name],
+    selector_B)
+if stopper_instance_name == 'structural':
+    stopper = stopper_dic[stopper_instance_name](stopper_n, stopper_r)
+else:
+    stopper = stopper_dic[stopper_instance_name](stopper_n)
+
+# Create algorithm function configuration
+algo_fun_config = gen.AlgorithmFunctionsConfig(
+    parent_selectors,
+    replace_selectors,
+    crossover_dic[crossover_fun_name],
+    mutation_dic[mutation_instance_name](
+        mutation_probability,
+        weapon_list, boots_list, helmet_list, gloves_list, armor_list),
+    stopper
+)
+
+start_time = time.time()
+
+# Create algorithm instance
+algo = gen.GeneticAlgorithm(
+    base_generation, K, algo_fun_config, 
+    implementation_dic[implementation_name])
+
+while not algo.is_algorithm_over():
+    curr_gen = algo.iterate()
+
+end_time = time.time()
+print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
+
+# TODO: Print results
