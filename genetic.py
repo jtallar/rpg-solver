@@ -61,7 +61,8 @@ class GeneticAlgorithm(object):
             self.K, self.player_collection, self.generation_count)
 
         # Cross parents, generating K childs
-        # TODO: Ver si hace falta aplicar cierto shuffle sobre parent_collection
+        # TODO: Ver si hace falta aplicar cierto shuffle sobre parent_collection 
+        #       --> Solo haria falta en elite, los otros y vuelven random
         child_collection = []
         for i in range(0, self.K - 1, 2):
             child_collection.extend(self.function_config.crossover_function(

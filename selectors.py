@@ -103,7 +103,7 @@ class BoltzmannSelector(BaseRouletteSelector):
         # Calculate sum of exp_partial
         sum_exp_partial = 0
         for el in collection:
-            el.exp_val = math.exp(el.fitness() / temperature(time))
+            el.exp_val = math.exp(el.fitness() / self.temperature(time))
             sum_exp_partial += el.exp_val
         
         # Calculate average exp_partial
