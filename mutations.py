@@ -29,7 +29,6 @@ class Mutation(object):
         self.gloves_list = gloves_list
         self.armor_list = armor_list
         self.map = [weapon_list, boots_list, helmet_list, gloves_list, armor_list]
-        self.M = 6
 
     def mutate(self, player):
         pass
@@ -59,8 +58,9 @@ class SimpleGen(Mutation):
         return player
     
 class MultiLimited(Mutation):
-    def __init__(self, pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
+    def __init__(self, pm, M, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
+        self.M = M
 
     def mutate(self, player):
         if random.random() < self.pm:

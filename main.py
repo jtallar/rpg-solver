@@ -175,6 +175,17 @@ replace_selectors = sel.CombinedSelector(
     selector_list[2], 
     selector_list[3],
     selector_B)
+if mutation_instance_name == 'multi_limited':
+    mutation = mutation_dic[mutation_instance_name](
+        mutation_probability, limited_multigen_m,
+        weapon_list, boots_list, helmet_list, gloves_list, armor_list
+    )
+else:
+    mutation = mutation_dic[mutation_instance_name](
+        mutation_probability,
+        weapon_list, boots_list, helmet_list, gloves_list, armor_list
+    )
+
 if stopper_instance_name == 'structural':
     stopper = stopper_dic[stopper_instance_name](stopper_n, stopper_r)
 else:
@@ -185,9 +196,7 @@ algo_fun_config = gen.AlgorithmFunctionsConfig(
     parent_selectors,
     replace_selectors,
     crossover_dic[crossover_fun_name],
-    mutation_dic[mutation_instance_name](
-        mutation_probability,
-        weapon_list, boots_list, helmet_list, gloves_list, armor_list),
+    mutation,
     stopper
 )
 
