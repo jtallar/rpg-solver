@@ -153,7 +153,7 @@ base_generation = utils.generate_players(
     N, player_class_dic[player_class_name], 
     weapon_list, boots_list, helmet_list, gloves_list, armor_list)
 
-print("Generation 0\n", base_generation)
+# print("Generation 0\n", base_generation)
 
 selector_list = []
 for sel_name in selector_name_list:
