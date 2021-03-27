@@ -100,18 +100,20 @@ class BoltzmannSelector(BaseRouletteSelector):
 
     # TODO: Ver si time es numero de generacion o tiempo en segundos
     def select(self, count, collection, time):
+        # Calculate temperature
+        temperature = self.temperature(time)
         # Calculate sum of exp_partial
         sum_exp_partial = 0
         for el in collection:
-            el.exp_val = math.exp(el.fitness() / self.temperature(time))
-            sum_exp_partial += el.exp_val
+            el.exp_val_partial = math.exp(el.fitness() / temperature)
+            sum_exp_partial += el.exp_val_partial
         
         # Calculate average exp_partial
         avg_exp_partial = sum_exp_partial / len(collection)
 
         # Save new exp_val value
         for el in collection:
-            el.exp_val = el.exp_val / avg_exp_partial
+            el.exp_val = el.exp_val_partial / avg_exp_partial
 
         # Roulette by exp_val
         return super().select(
