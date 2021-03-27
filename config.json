@@ -22,6 +22,7 @@
 	"selector_prob_tournament_th": 0.8,
 	"selector_boltzmann_t0": 10.0,
 	"selector_boltzmann_tc": 1.0,
+	"selector_boltzmann_k": 0.2,
 	"implementation": "fill-all",
 	"stopper": "generation_count",
 	"stopper_n": 20,

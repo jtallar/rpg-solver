@@ -101,9 +101,11 @@ if any(name == 'probabilistic_tournament' for name in selector_name_list):
 # If any selector is boltzmann, read T0 and Tc
 if any(name == 'boltzmann' for name in selector_name_list):
     selector_boltzmann_t0 = utils.read_config_param(
-        config, "selector_boltzmann_t0", lambda el : float(el), lambda el : el < 0)
+        config, "selector_boltzmann_t0", lambda el : float(el), lambda el : el <= 0)
     selector_boltzmann_tc = utils.read_config_param(
-        config, "selector_boltzmann_tc", lambda el : float(el), lambda el : el < 0 or el > selector_boltzmann_t0)
+        config, "selector_boltzmann_tc", lambda el : float(el), lambda el : el <= 0 or el > selector_boltzmann_t0)
+    selector_boltzmann_k = utils.read_config_param(
+        config, "selector_boltzmann_k", lambda el : float(el), lambda el : el <= 0)
 # Selector A and B percentages
 selector_A = utils.read_config_param(
     config, "A", lambda el : float(el), lambda el : el < 0 or el > 1)
@@ -162,7 +164,7 @@ for sel_name in selector_name_list:
     elif sel_name == 'probabilistic_tournament':
         selector = selector_dic[sel_name](selector_prob_th)
     elif sel_name == 'boltzmann':
-        selector = selector_dic[sel_name](selector_boltzmann_t0, selector_boltzmann_tc)
+        selector = selector_dic[sel_name](selector_boltzmann_t0, selector_boltzmann_tc, selector_boltzmann_k)
     else:
         selector = selector_dic[sel_name]()
     selector_list.append(selector)

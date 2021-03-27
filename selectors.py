@@ -89,11 +89,10 @@ class RankingSelector(BaseRouletteSelector):
 # Recieves additional constructor params: init_temperature and end_temperature
 # Recieves additional param: time (Algorithm should go about modifying it)
 class BoltzmannSelector(BaseRouletteSelector):
-    k_factor = 0.2
-
-    def __init__(self, init_temperature, end_temperature):
+    def __init__(self, init_temperature, end_temperature, k_factor):
         self.init_temperature = init_temperature
         self.end_temperature = end_temperature
+        self.k_factor = k_factor
 
     def temperature(self, time):
         return self.end_temperature + (self.init_temperature - self.end_temperature) * math.exp(-self.k_factor * time)
