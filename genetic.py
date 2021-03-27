@@ -51,6 +51,7 @@ class GeneticAlgorithm(object):
         self.generation_count = 0
         self.update_fit_stats()
 
+    # TODO: Add diversity calculation (?)
     def update_fit_stats(self):
         sum_fitness = 0
         worst_fit = best_fit = self.player_collection[0].fitness()
