@@ -119,6 +119,8 @@ class Player(object):
     HEIGHT_POS, WEAPON_POS, BOOTS_POS = 0, 1, 2
     HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
+    FIT_ABS_TOL = 1e-5
+
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
 

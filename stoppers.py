@@ -1,4 +1,6 @@
+import math
 import time
+import player as ply
 
 # n will be used as first param for all methods
 class Stopper(object):
@@ -39,10 +41,18 @@ class StructuralStopper(Stopper):
     def is_algorithm_over(self, algo):
         pass
 
-# TODO: Implement full
 class ContentStopper(Stopper):
     def __init__(self, generation_count):
         super().__init__(generation_count)
+        self.prev_best_fitness = float("Inf")
+        self.repeated_best_count = 0
     
     def is_algorithm_over(self, algo):
-        pass
+        cur_best_fitness = algo.best_fit.fitness()
+        if math.isclose(self.prev_best_fitness, cur_best_fitness, abs_tol=ply.Player.FIT_ABS_TOL):
+            self.repeated_best_count += 1
+        else:
+            self.repeated_best_count = 0
+
+        self.prev_best_fitness = cur_best_fitness
+        return self.repeated_best_count >= self.n
