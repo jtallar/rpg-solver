@@ -14,22 +14,21 @@ class TimeStopper(Stopper):
         super().__init__(max_seconds)
     
     def is_algorithm_over(self, algo):
-        return (time.time() - algo.start_time) > self.n
+        return (time.time() - algo.start_time) >= self.n
 
 class GenerationCountStopper(Stopper):
     def __init__(self, max_count):
         super().__init__(max_count)
     
     def is_algorithm_over(self, algo):
-        return algo.generation_count > self.n
+        return algo.generation_count >= self.n
 
-# TODO: Implement is_algorithm_over
 class AcceptableSolutionStopper(Stopper):
     def __init__(self, min_fitness):
         super().__init__(min_fitness)
     
     def is_algorithm_over(self, algo):
-        pass
+        return algo.best_fit >= self.n
 
 # TODO: Implement full
 class StructuralStopper(Stopper):
