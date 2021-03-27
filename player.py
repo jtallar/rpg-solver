@@ -171,7 +171,6 @@ class Player(object):
         self.player_class = player_class
         self.height = height
         # TODO: Check si vale la pena hacer los chequeos de equipment_type
-        # TODO: Check si vale la pena guardarlos por separado, no en un array
         if weapon.equipment_type != EquipmentType.Weapon:
             raise ValueError("Not a weapon!")
         self.weapon = weapon
@@ -193,7 +192,6 @@ class Player(object):
         self.armor = armor
 
         # Initialize stat saved values to None, will be calculated and stored on demand
-        # TODO: Check si me sirve guardar todas, puedo sino guardar solo fitness
         self.reset_saved_values()
 
     def reset_saved_values(self):

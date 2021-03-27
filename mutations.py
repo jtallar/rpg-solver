@@ -34,15 +34,6 @@ class Mutation(object):
     def mutate(self, player):
         pass
     
-    # def new_gen(self, n_gene):
-    #     if n_gene == 0: return random.randint(min_height, max_height)
-    #     elif n_gene == 1: return self.weapon_list[random.randint(0, len(self.weapon_list) - 1)]
-    #     elif n_gene == 2: return self.boots_list[random.randint(0, len(self.weapon_list) - 1)]
-    #     elif n_gene == 3: return self.helmet_list[random.randint(0, len(self.weapon_list) - 1)]
-    #     elif n_gene == 4: return self.gloves_list[random.randint(0, len(self.weapon_list) - 1)]
-    #     elif n_gene == 5: return self.armor_list[random.randint(0, len(self.weapon_list) - 1)]
-    #     else: print("error")    # TODO: para test
-
 class SimpleGen(Mutation):
     def __init__(self, pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
