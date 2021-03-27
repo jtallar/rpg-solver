@@ -32,15 +32,24 @@ class AcceptableSolutionStopper(Stopper):
     def is_algorithm_over(self, algo):
         return algo.best_fit.fitness() >= self.n
 
-# TODO: Implement full
+# TODO: Ver si esta bien de ver cantidad de cambios, en vez de exactamente que grupo no cambio
 class StructuralStopper(Stopper):
     def __init__(self, generation_count, r):
         super().__init__(generation_count)
         self.r = r  # Relevant proportion of generation
+        self.repeated_part_count = 0
     
     def is_algorithm_over(self, algo):
-        pass
+        # Proportion of equal players from this gen to previous gen
+        cur_maintain = (algo.N - algo.generation_changes) / algo.N
+        if cur_maintain >= self.r:
+            self.repeated_part_count += 1
+        else:
+            self.repeated_part_count = 0
+        
+        return self.repeated_part_count >= self.n
 
+# TODO: Ver si esta bien interpretar que no cambie fitness, aun cambiando el jugador
 class ContentStopper(Stopper):
     def __init__(self, generation_count):
         super().__init__(generation_count)

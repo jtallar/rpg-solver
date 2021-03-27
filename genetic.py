@@ -51,8 +51,8 @@ class GeneticAlgorithm(object):
         self.generation_count = 0
         self.update_fit_stats()
 
-        self.generation_changes = self.N
         self.previous_generation = {}
+        self.update_diversity_and_changes()
 
     # TODO: Add diversity calculation (?)
     def update_fit_stats(self):
@@ -68,20 +68,23 @@ class GeneticAlgorithm(object):
         self.avg_fitness = sum_fitness / self.N
 
     # TODO: Revisar, hacer hashing y eq de player y probar
-    def update_generation_changes(self):
+    def update_diversity_and_changes(self):
         generation_changes = 0
         current_generation = {}
         for player in self.player_collection:
+            # Control changes with previous generation
             if player in self.previous_generation and self.previous_generation[player] > 0:
                 self.previous_generation[player] -= 1
             else:
                 generation_changes += 1
+            # Save current generation
             if player not in current_generation:
                 current_generation[player] = 0
             current_generation[player] += 1
         
         self.generation_changes = generation_changes
         self.previous_generation = current_generation
+        self.diversity = len(current_generation) / self.N
 
     def is_algorithm_over(self):
         return self.function_config.stop_instance.is_algorithm_over(self)
@@ -118,6 +121,7 @@ class GeneticAlgorithm(object):
         # Update general values
         self.generation_count += 1
         self.update_fit_stats()
+        self.update_diversity_and_changes()
 
         return self.player_collection
 

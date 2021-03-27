@@ -37,6 +37,19 @@ class EquipmentType(enum.Enum):
     Gloves = "🧤 "
     Armor = "🥋 "
 
+    def __str__(self):
+        return self.value
+
+    # Define hash and eq methods to allow comparation in equipment hash and eq
+    def __hash__(self):
+        return hash(self.value)
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self, other):
+        return not (self == other)
+
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
         """Returns a Stats object with the given stats
@@ -113,6 +126,18 @@ class Equipment(object):
     def __repr__(self):
         return "Equipment{type=%s,id=%s,%s}" % (self.equipment_type.value, self.id, self.stats)
 
+    # Define hash and eq methods to allow comparation in player hash and eq
+    def __hash__(self):
+        return hash(self.id) + 31 * hash(self.equipment_type)
+
+    def __eq__(self, other):
+        if self.equipment_type != other.equipment_type:
+            return False
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return not (self == other)
+
 class Player(object):
 
     n_genes = 6
@@ -120,6 +145,7 @@ class Player(object):
     HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
     FIT_ABS_TOL = 1e-5
+    FIT_DEC_COUNT = int(abs(math.log10(FIT_ABS_TOL)))
 
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
@@ -279,3 +305,14 @@ class Player(object):
     def __repr__(self):
         # TODO: Change self.fitness() to self.s_fitness in production
         return "Player(Class=%s,fitness=%s)" % (self.player_class, round(self.fitness(), 3))
+
+    # Define hash and eq methods to allow key usage --> Diversity + Population change (StructuralStopper)
+    # TODO: Definir si dos jugadores son iguales revisando gen a gen o por fitness
+    def __hash__(self):
+        return hash(round(self.fitness(), self.FIT_DEC_COUNT))
+
+    def __eq__(self, other):
+        return math.isclose(self.fitness(), other.fitness(), abs_tol=self.FIT_ABS_TOL)
+
+    def __ne__(self, other):
+        return not (self == other)

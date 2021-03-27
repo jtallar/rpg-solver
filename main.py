@@ -209,13 +209,11 @@ algo = gen.GeneticAlgorithm(
     base_generation, K, algo_fun_config, 
     implementation_dic[implementation_name])
 
+utils.print_algorithm_stats(algo)
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
-    print(f'Generation {algo.generation_count}\t'
-          f'Best fitness {round(algo.best_fit.fitness(), 3)}\t'
-          f'Worst fitness {round(algo.worst_fit.fitness(), 3)}\t'
-          f'Avg fitness {round(algo.avg_fitness, 3)}\n')
+    utils.print_algorithm_stats(algo)
 
 end_time = time.time()
 print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
