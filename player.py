@@ -277,12 +277,3 @@ class Player(object):
     def __repr__(self):
         # TODO: Change self.fitness() to self.s_fitness in production
         return "Player(Class=%s,fitness=%s)" % (self.player_class, round(self.fitness(), 3))
-
-    def update(self, genes):
-        self.height = genes[self.HEIGHT_POS]
-        self.weapon = genes[self.WEAPON_POS]
-        self.boots = genes[self.BOOTS_POS]
-        self.helmet = genes[self.HELMET_POS]
-        self.gloves = genes[self.GLOVES_POS]
-        self.armor = genes[self.ARMOR_POS]
-        self.reset_saved_values()

@@ -73,14 +73,15 @@ class GeneticAlgorithm(object):
             child_collection.append(parent_collection[self.K - 1])
 
         # Mutate each child
+        mutated_child_collection = []
         for child in child_collection:
-            self.function_config.mutation_instance.mutate(child)
+            mutated_child_collection.append(self.function_config.mutation_instance.mutate(child))
 
         # Choose N from N (actual) + K (childs) to save new generation
         if self.fill_all:
-            self.player_collection = self.do_fill_all(child_collection)
+            self.player_collection = self.do_fill_all(mutated_child_collection)
         else:
-            self.player_collection = self.do_fill_parent(child_collection)
+            self.player_collection = self.do_fill_parent(mutated_child_collection)
 
         # Update general values
         self.generation_count += 1
