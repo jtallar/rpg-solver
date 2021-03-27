@@ -1,4 +1,5 @@
 import random
+import player as ply
 
 (min_height, max_height) = (1.3, 2.0)
 
@@ -29,7 +30,6 @@ class Mutation(object):
         self.gloves_list = gloves_list
         self.armor_list = armor_list
         self.map = [weapon_list, boots_list, helmet_list, gloves_list, armor_list]
-        self.M = 6
 
     def mutate(self, player):
         pass
@@ -55,12 +55,14 @@ class SimpleGen(Mutation):
                 player_genes[gene] = random.uniform(min_height,max_height)
             else:
                 player_genes[gene] = self.map[gene-1][random.randint(0, len(self.map[gene-1]) - 1)]
-            player.update(player_genes)
+
+            return ply.Player.new_from_array(player.player_class, player_genes)
         return player
     
 class MultiLimited(Mutation):
-    def __init__(self, pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
+    def __init__(self, pm, M, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
         super().__init__(pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list)
+        self.M = M
 
     def mutate(self, player):
         if random.random() < self.pm:
@@ -72,7 +74,8 @@ class MultiLimited(Mutation):
                     player_genes[gene_i] = random.uniform(min_height,max_height)
                 else:
                     player_genes[gene_i] = self.map[gene_i-1][random.randint(0, len(self.map[gene_i-1]) - 1)]
-            player.update(player_genes)
+            
+            return ply.Player.new_from_array(player.player_class, player_genes)
         return player
 
 class MultiUniform(Mutation):
@@ -87,8 +90,7 @@ class MultiUniform(Mutation):
                     player_genes[gene_i] = random.uniform(min_height,max_height)
                 else:
                     player_genes[gene_i] = self.map[gene_i-1][random.randint(0, len(self.map[gene_i-1]) - 1)]
-        player.update(player_genes)
-        return player
+        return ply.Player.new_from_array(player.player_class, player_genes)
 
 class Full(Mutation):
     def __init__(self, pm, weapon_list, boots_list, helmet_list, gloves_list, armor_list):
@@ -102,5 +104,6 @@ class Full(Mutation):
                     player_genes[gene_i] = random.uniform(min_height,max_height)
                 else:
                     player_genes[gene_i] = self.map[gene_i-1][random.randint(0, len(self.map[gene_i-1]) - 1)]
-            player.update(player_genes)
+
+            return ply.Player.new_from_array(player.player_class, player_genes)
         return player

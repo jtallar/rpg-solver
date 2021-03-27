@@ -19,10 +19,10 @@ class PlayerClass(enum.Enum):
         def __repr__(self):
             return "PlayerClass(%s)" % (self.emoji)
             
-    Guerrero = ClassType(0.6, 0.6, "🗡️")
-    Arquero = ClassType(0.9, 0.1, "🏹")
-    Defensor = ClassType(0.3, 0.8, "🛡️")
-    Infiltrado = ClassType(0.8, 0.3, "🕵")
+    Guerrero = ClassType(0.6, 0.6, "🗡️ ")
+    Arquero = ClassType(0.9, 0.1, "🏹 ")
+    Defensor = ClassType(0.3, 0.8, "🛡️ ")
+    Infiltrado = ClassType(0.8, 0.3, "🕵 ")
 
     def fitness(self, attack, defense):
         return self.value.fitness(attack, defense)
@@ -31,11 +31,11 @@ class PlayerClass(enum.Enum):
         return self.value.__str__()
 
 class EquipmentType(enum.Enum):
-    Weapon = "🥊"
-    Boots = "🥾"
-    Helmet = "⛑️"
-    Gloves = "🧤"
-    Armor = "🥋"
+    Weapon = "🥊 "
+    Boots = "🥾 "
+    Helmet = "⛑️ "
+    Gloves = "🧤 "
+    Armor = "🥋 "
 
 class Stats(object):
     def __init__(self, strength, agility, expertise, resistance, life):
@@ -119,6 +119,8 @@ class Player(object):
     HEIGHT_POS, WEAPON_POS, BOOTS_POS = 0, 1, 2
     HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
+    FIT_ABS_TOL = 1e-5
+
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
 
@@ -166,6 +168,9 @@ class Player(object):
 
         # Initialize stat saved values to None, will be calculated and stored on demand
         # TODO: Check si me sirve guardar todas, puedo sino guardar solo fitness
+        self.reset_saved_values()
+
+    def reset_saved_values(self):
         self.s_player_stats = None
         self.s_attack_mod = None
         self.s_defense_mod = None
@@ -272,12 +277,5 @@ class Player(object):
         return self.__repr__()
 
     def __repr__(self):
-        return "Player(Class=%s,height=%s,fitness=%s)" % (self.player_class, self.height, self.s_fitness)
-
-    def update(self, genes):
-        self.height = genes[self.HEIGHT_POS]
-        self.weapon = genes[self.WEAPON_POS]
-        self.boots = genes[self.BOOTS_POS]
-        self.helmet = genes[self.HELMET_POS]
-        self.gloves = genes[self.GLOVES_POS]
-        self.armor = genes[self.ARMOR_POS]
+        # TODO: Change self.fitness() to self.s_fitness in production
+        return "Player(Class=%s,fitness=%s)" % (self.player_class, round(self.fitness(), 3))
