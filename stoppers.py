@@ -28,7 +28,7 @@ class AcceptableSolutionStopper(Stopper):
         super().__init__(min_fitness)
     
     def is_algorithm_over(self, algo):
-        return algo.best_fit >= self.n
+        return algo.best_fit.fitness() >= self.n
 
 # TODO: Implement full
 class StructuralStopper(Stopper):

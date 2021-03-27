@@ -213,9 +213,9 @@ while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
     print(f'Generation {algo.generation_count}\t'
-          f'Best fitness {round(algo.best_fit, 3)}\t'
-          f'Worst fitness {round(algo.worst_fit, 3)}\t'
-          f'Avg fitness {round(algo.avg_fit, 3)}\n')
+          f'Best fitness {round(algo.best_fit.fitness(), 3)}\t'
+          f'Worst fitness {round(algo.worst_fit.fitness(), 3)}\t'
+          f'Avg fitness {round(algo.avg_fitness, 3)}\n')
 
 end_time = time.time()
 print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
