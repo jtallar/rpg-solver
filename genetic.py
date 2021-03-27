@@ -49,8 +49,21 @@ class GeneticAlgorithm(object):
 
         self.start_time = time.time()
         self.generation_count = 0
-        self.best_fit = max(self.player_collection)
-    
+        self.update_fit_stats()
+
+    def update_fit_stats(self):
+        sum_fitness = 0
+        worst_fit = best_fit = self.player_collection[0].fitness()
+        for player in self.player_collection:
+            fitness = player.fitness()
+            if fitness > best_fit: best_fit = fitness
+            if fitness < worst_fit: worst_fit = fitness
+            sum_fitness += fitness
+        
+        self.best_fit = best_fit
+        self.worst_fit = worst_fit
+        self.avg_fit = sum_fitness / self.N
+
     def is_algorithm_over(self):
         return self.function_config.stop_instance.is_algorithm_over(self)
 
@@ -85,7 +98,7 @@ class GeneticAlgorithm(object):
 
         # Update general values
         self.generation_count += 1
-        self.best_fit = max(self.player_collection)
+        self.update_fit_stats()
 
         return self.player_collection
 
