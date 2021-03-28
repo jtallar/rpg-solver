@@ -85,7 +85,6 @@ class GeneticAlgorithm(object):
         self.previous_generation = current_generation
 
         # Update diversity
-        # TODO: Check calculo de diversity
         self.diversity = len(current_generation) / self.N
 
     def is_algorithm_over(self):

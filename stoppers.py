@@ -49,7 +49,6 @@ class StructuralStopper(Stopper):
         
         return self.repeated_part_count >= self.n
 
-# TODO: Ver si esta bien interpretar que no cambie fitness, aun cambiando el jugador
 class ContentStopper(Stopper):
     def __init__(self, generation_count):
         super().__init__(generation_count)
