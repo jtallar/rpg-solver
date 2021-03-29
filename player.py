@@ -312,7 +312,7 @@ class Player(object):
                 self.weapon, self.boots, self.helmet, self.gloves, self.armor)
 
     # Define hash and eq methods to allow key usage --> Diversity + Population change (StructuralStopper)
-    # TODO: Definir si dos jugadores son iguales revisando gen a gen o por fitness
+    # Two players are equal if their fitness is close enough
     def __hash__(self):
         return hash(round(self.fitness(), self.FIT_DEC_COUNT))
 

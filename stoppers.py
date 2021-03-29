@@ -32,7 +32,7 @@ class AcceptableSolutionStopper(Stopper):
     def is_algorithm_over(self, algo):
         return algo.best_fit.fitness() >= self.n
 
-# TODO: Ver si esta bien de ver cantidad de cambios, en vez de exactamente que grupo no cambio
+# Taking number of changes between Gn and Gn-1 (change defined by fitness)
 class StructuralStopper(Stopper):
     def __init__(self, generation_count, r):
         super().__init__(generation_count)
@@ -49,6 +49,7 @@ class StructuralStopper(Stopper):
         
         return self.repeated_part_count >= self.n
 
+# Taking fitness by value, can be different players
 class ContentStopper(Stopper):
     def __init__(self, generation_count):
         super().__init__(generation_count)
