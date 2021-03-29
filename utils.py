@@ -38,11 +38,11 @@ def generate_players(count, player_class, weapon_list, boots_list, helmet_list, 
     return players
 
 def print_algorithm_stats(algo):
-    print(f'Generation {algo.generation_count}\t'
-          f'Best fitness {round(algo.best_fit.fitness(), 3)}\t'
-          f'Worst fitness {round(algo.worst_fit.fitness(), 3)}\t'
-          f'Avg fitness {round(algo.avg_fitness, 3)}\n'
-          f'Diversity {round(algo.diversity, 4) * 100}%\n'
+    print(f'Gen {algo.generation_count}\t'
+          f'Best fitness {round(algo.best_fit.fitness(), ply.Player.FIT_DEC_COUNT)}\t'
+          f'Worst fitness {round(algo.worst_fit.fitness(), ply.Player.FIT_DEC_COUNT)}\t'
+          f'Avg fitness {round(algo.avg_fitness, ply.Player.FIT_DEC_COUNT)}\n'
+          f'Diversity {round(algo.diversity * 100, ply.Player.FIT_DEC_COUNT)}%  '
           f'Generation Changes {algo.generation_changes}\n')
 
 def plot_stats(algo, axi, interval=0.3):

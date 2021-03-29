@@ -305,8 +305,11 @@ class Player(object):
         return self.__repr__()
 
     def __repr__(self):
-        return "Player(%s, fitness=%s, height=%s\n%s\n%s\n%s\n%s\n%s\n)" % (self.player_class, round(self.fitness(), self.FIT_DEC_COUNT),
-                round(self.height, self.FIT_DEC_COUNT), self.weapon, self.boots, self.helmet, self.gloves, self.armor)
+        return "Player(%s,height=%s meters\nfitness=%s(attack=%s,defense=%s,ATM=%s,DEM=%s)\n%s\n%s\n%s\n%s\n%s\n)" % (self.player_class, 
+                round(self.height, self.FIT_DEC_COUNT), round(self.fitness(), self.FIT_DEC_COUNT), 
+                round(self.s_attack, self.FIT_DEC_COUNT), round(self.s_defense, self.FIT_DEC_COUNT),
+                round(self.s_attack_mod, self.FIT_DEC_COUNT), round(self.s_defense_mod, self.FIT_DEC_COUNT),
+                self.weapon, self.boots, self.helmet, self.gloves, self.armor)
 
     # Define hash and eq methods to allow key usage --> Diversity + Population change (StructuralStopper)
     # TODO: Definir si dos jugadores son iguales revisando gen a gen o por fitness
