@@ -2,6 +2,9 @@ import csv, itertools
 import random
 import sys
 import player as ply
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt2
+from matplotlib.animation import FuncAnimation
 
 (min_height, max_height) = (1.3, 2.0)
 
@@ -34,10 +37,24 @@ def generate_players(count, player_class, weapon_list, boots_list, helmet_list, 
     
     return players
 
-def print_algorithm_stats(algo):
+def print_algorithm_stats(algo, i):
     print(f'Generation {algo.generation_count}\t'
           f'Best fitness {round(algo.best_fit.fitness(), 3)}\t'
           f'Worst fitness {round(algo.worst_fit.fitness(), 3)}\t'
           f'Avg fitness {round(algo.avg_fitness, 3)}\n'
           f'Diversity {round(algo.diversity, 4) * 100}%\n'
           f'Generation Changes {algo.generation_changes}\n')
+
+def plot_stats(algo, axi):       #TODO: Pide fitness max ??
+    axi[0].scatter(algo.generation_count, algo.best_fit.fitness(), c='red')
+    axi[0].scatter(algo.generation_count, algo.worst_fit.fitness(), c='gold')
+    axi[0].scatter(algo.generation_count, algo.avg_fitness, c='darkorange')
+    axi[1].scatter(algo.generation_count, algo.diversity, c='green')
+    plt.pause(0.3)
+
+# x, y = [], []
+# def animate(value, gen):
+#     x.append(value)
+#     y.append(gen)
+#     plt.plot(x,y)
+# ani = FuncAnimation(plt.gcf(), animate, interval=1000)
