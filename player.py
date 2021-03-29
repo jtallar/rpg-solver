@@ -13,12 +13,6 @@ class PlayerClass(enum.Enum):
         def fitness(self, attack, defense):
             return self.attack_mult * attack + self.defense_mult * defense
         
-        def __str__(self):
-            return self.__repr__()
-
-        def __repr__(self):
-            return "PlayerClass(%s)" % (self.emoji)
-            
     Guerrero = ClassType(0.6, 0.6, "🗡️ ")
     Arquero = ClassType(0.9, 0.1, "🏹 ")
     Defensor = ClassType(0.3, 0.8, "🛡️ ")
@@ -28,17 +22,23 @@ class PlayerClass(enum.Enum):
         return self.value.fitness(attack, defense)
 
     def __str__(self):
-        return self.value.__str__()
+        return self.__repr__()
+
+    def __repr__(self):
+        return "%s(%s)" % (self.name, self.value.emoji)
 
 class EquipmentType(enum.Enum):
     Weapon = "🥊 "
     Boots = "🥾 "
-    Helmet = "⛑️ "
+    Helmet = "⛑️  "
     Gloves = "🧤 "
     Armor = "🥋 "
 
     def __str__(self):
-        return self.value
+        return self.__repr__()
+
+    def __repr__(self):
+        return "%s(%s)" % (self.name, self.value)
 
     # Define hash and eq methods to allow comparation in equipment hash and eq
     def __hash__(self):
@@ -51,6 +51,8 @@ class EquipmentType(enum.Enum):
         return not (self == other)
 
 class Stats(object):
+    PRINT_DEC = 3
+
     def __init__(self, strength, agility, expertise, resistance, life):
         """Returns a Stats object with the given stats
 
@@ -78,7 +80,9 @@ class Stats(object):
         return self.__repr__()
 
     def __repr__(self):
-        return "Stats(strength=%s,agility=%s,expertise=%s,resistance=%s,life=%s)" % (self.strength, self.agility, self.expertise, self.resistance, self.life)
+        return "Stats(str=%s,ag=%s,exp=%s,res=%s,lif=%s)" % (round(self.strength, self.PRINT_DEC), 
+            round(self.agility, self.PRINT_DEC), round(self.expertise, self.PRINT_DEC), 
+            round(self.resistance, self.PRINT_DEC), round(self.life, self.PRINT_DEC))
 
     def add_stats(self, other_stats):
         self.strength += other_stats.strength
@@ -124,7 +128,7 @@ class Equipment(object):
         return self.__repr__()
 
     def __repr__(self):
-        return "Equipment{type=%s,id=%s,%s}" % (self.equipment_type.value, self.id, self.stats)
+        return "Equip{%s,id=%s,%s}" % (self.equipment_type.value, self.id, self.stats)
 
     # Define hash and eq methods to allow comparation in player hash and eq
     def __hash__(self):
@@ -144,7 +148,7 @@ class Player(object):
     HEIGHT_POS, WEAPON_POS, BOOTS_POS = 0, 1, 2
     HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
-    FIT_ABS_TOL = 1e-5
+    FIT_ABS_TOL = 1e-4
     FIT_DEC_COUNT = int(abs(math.log10(FIT_ABS_TOL)))
 
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
@@ -301,8 +305,8 @@ class Player(object):
         return self.__repr__()
 
     def __repr__(self):
-        # TODO: Change self.fitness() to self.s_fitness in production
-        return "Player(Class=%s,fitness=%s)" % (self.player_class, round(self.fitness(), 3))
+        return "Player(%s, fitness=%s, height=%s\n%s\n%s\n%s\n%s\n%s\n)" % (self.player_class, round(self.fitness(), self.FIT_DEC_COUNT),
+                round(self.height, self.FIT_DEC_COUNT), self.weapon, self.boots, self.helmet, self.gloves, self.armor)
 
     # Define hash and eq methods to allow key usage --> Diversity + Population change (StructuralStopper)
     # TODO: Definir si dos jugadores son iguales revisando gen a gen o por fitness
