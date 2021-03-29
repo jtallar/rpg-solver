@@ -6,10 +6,11 @@ import signal
 import utils
 import player as ply
 import mutations as mut
-import selectors as sel
+import selector as sel
 import crossovers as cros
 import stoppers as stp
 import genetic as gen
+import matplotlib.pyplot as plt
 
 # Define signal handler for Ctrl+C for ordered interrupt
 def signal_handler(sig, frame):
@@ -210,14 +211,25 @@ algo = gen.GeneticAlgorithm(
     base_generation, K, algo_fun_config, 
     implementation_dic[implementation_name])
 
-utils.print_algorithm_stats(algo)
+plt.style.use('fivethirtyeight')
+_, axi = plt.subplots(2, figsize=(15, 8))
+
+axi[0].set_ylabel('Fitness')
+axi[1].set_ylabel('Diversity')
+axi[1].set_xlabel('Generation N°')
+
+i = 0
+utils.print_algorithm_stats(algo, i)
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
-    utils.print_algorithm_stats(algo)
+    utils.print_algorithm_stats(algo, i)
+    utils.plot_stats(algo, axi)
+    i+=1
 
 end_time = time.time()
 print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
 
 # TODO: Print results
 print(f'Best fit: {algo.best_fit}')
+plt.show()
