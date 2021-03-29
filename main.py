@@ -218,14 +218,12 @@ axi[0].set_ylabel('Fitness')
 axi[1].set_ylabel('Diversity')
 axi[1].set_xlabel('Generation N°')
 
-i = 0
-utils.print_algorithm_stats(algo, i)
+utils.print_algorithm_stats(algo)
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
-    utils.print_algorithm_stats(algo, i)
+    utils.print_algorithm_stats(algo)
     utils.plot_stats(algo, axi)
-    i+=1
 
 end_time = time.time()
 print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')

@@ -3,6 +3,9 @@
 ## Requerimientos
 Para correr el solver, es necesario tener instalado `Python 3`.
 
+Además, debe instalarse `matplotlib`, lo cual se puede lograr con
+`python3 -m pip install matplotlib`
+
 ### Versiones
 Para el desarrollo, se utilizó la versión `Python 3.8.5`
 

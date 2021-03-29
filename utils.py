@@ -37,7 +37,7 @@ def generate_players(count, player_class, weapon_list, boots_list, helmet_list, 
     
     return players
 
-def print_algorithm_stats(algo, i):
+def print_algorithm_stats(algo):
     print(f'Generation {algo.generation_count}\t'
           f'Best fitness {round(algo.best_fit.fitness(), 3)}\t'
           f'Worst fitness {round(algo.worst_fit.fitness(), 3)}\t'
@@ -45,7 +45,7 @@ def print_algorithm_stats(algo, i):
           f'Diversity {round(algo.diversity, 4) * 100}%\n'
           f'Generation Changes {algo.generation_changes}\n')
 
-def plot_stats(algo, axi):       #TODO: Pide fitness max ??
+def plot_stats(algo, axi):
     axi[0].scatter(algo.generation_count, algo.best_fit.fitness(), c='red')
     axi[0].scatter(algo.generation_count, algo.worst_fit.fitness(), c='gold')
     axi[0].scatter(algo.generation_count, algo.avg_fitness, c='darkorange')
