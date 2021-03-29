@@ -49,27 +49,22 @@ class GeneticAlgorithm(object):
 
         self.start_time = time.time()
         self.generation_count = 0
-        self.update_fit_stats()
-
         self.previous_generation = {}
-        self.update_diversity_and_changes()
+        self.update_algo_stats()
 
-    def update_fit_stats(self):
+    def update_algo_stats(self):
+        generation_changes = 0
+        current_generation = {}
+
         sum_fitness = 0
         worst_fit = best_fit = self.player_collection[0]
         for player in self.player_collection:
+            # Update best fit & worst fit
             if player > best_fit: best_fit = player
             if player < worst_fit: worst_fit = player
+            # Accumulate fitness
             sum_fitness += player.fitness()
-        
-        self.best_fit = best_fit
-        self.worst_fit = worst_fit
-        self.avg_fitness = sum_fitness / self.N
-
-    def update_diversity_and_changes(self):
-        generation_changes = 0
-        current_generation = {}
-        for player in self.player_collection:
+            # ------------------------------------------
             # Control changes with previous generation
             if player in self.previous_generation and self.previous_generation[player] > 0:
                 self.previous_generation[player] -= 1
@@ -80,9 +75,16 @@ class GeneticAlgorithm(object):
                 current_generation[player] = 0
             current_generation[player] += 1
         
+        # Update fitness values
+        self.best_fit = best_fit
+        self.worst_fit = worst_fit
+        self.avg_fitness = sum_fitness / self.N
+
+        # Update changes
         self.generation_changes = generation_changes
         self.previous_generation = current_generation
-        # TODO: Check calculo de diversity
+
+        # Update diversity
         self.diversity = len(current_generation) / self.N
 
     def is_algorithm_over(self):
@@ -119,8 +121,7 @@ class GeneticAlgorithm(object):
 
         # Update general values
         self.generation_count += 1
-        self.update_fit_stats()
-        self.update_diversity_and_changes()
+        self.update_algo_stats()
 
         return self.player_collection
 
