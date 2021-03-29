@@ -1,13 +1,13 @@
 {
-	"armas_file": "dataset/armas.tsv",
-	"botas_file": "dataset/botas.tsv",
-	"cascos_file": "dataset/cascos.tsv",
-	"guantes_file": "dataset/guantes.tsv",
-	"pecheras_file": "dataset/pecheras.tsv",
-	"max_rows_tsv": 10,
+	"armas_file": "dataset_small/armas.tsv",
+	"botas_file": "dataset_small/botas.tsv",
+	"cascos_file": "dataset_small/cascos.tsv",
+	"guantes_file": "dataset_small/guantes.tsv",
+	"pecheras_file": "dataset_small/pecheras.tsv",
+	"max_rows_tsv": 100,
 	"player_class": "guerrero",
-	"N": 10,
-	"K": 3,
+	"N": 50,
+	"K": 20,
 	"crossover": "one_point",
 	"mutation": "simple_gen",
 	"mutation_probability": 0.1,
@@ -26,5 +26,7 @@
 	"implementation": "fill-all",
 	"stopper": "generation_count",
 	"stopper_n": 20,
-	"stopper_r": 0.8
+	"stopper_r": 0.8,
+	"plot": true,
+	"plot_interval_time": 0.3
 }

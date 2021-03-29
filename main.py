@@ -134,6 +134,12 @@ stopper_n = utils.read_config_param(
 if stopper_instance_name == 'structural':
     stopper_r = utils.read_config_param(
         config, "stopper_r", lambda el : float(el), lambda el : el <= 0 or el > 1)
+# Printing configuration
+plot_boolean = utils.read_config_param(
+    config, "plot", lambda el : bool(el), lambda el : False)
+if plot_boolean:
+    plot_interval_time = utils.read_config_param(
+        config, "plot_interval_time", lambda el : float(el), lambda el : el < 0)
 
 end_time = time.time()
 print(f'Load Configuration \t ⏱  {round(end_time - start_time, 6)} seconds')
@@ -211,23 +217,32 @@ algo = gen.GeneticAlgorithm(
     base_generation, K, algo_fun_config, 
     implementation_dic[implementation_name])
 
-plt.style.use('fivethirtyeight')
-_, axi = plt.subplots(2, figsize=(15, 8))
+if plot_boolean:
+    # Interactive Mode
+    plt.ion()
+    # Plot styling
+    plt.style.use('fivethirtyeight')
+    _, axi = plt.subplots(2, figsize=(15, 8))
 
-axi[0].set_ylabel('Fitness')
-axi[1].set_ylabel('Diversity')
-axi[1].set_xlabel('Generation N°')
+    axi[0].set_ylabel('Fitness')
+    axi[1].set_ylabel('Diversity')
+    axi[1].set_xlabel('Generation N°')
+
+    # Show figure window
+    plt.show(block=False)
 
 utils.print_algorithm_stats(algo)
+if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time)
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
     utils.print_algorithm_stats(algo)
-    utils.plot_stats(algo, axi)
+    if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time)
 
 end_time = time.time()
 print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
 
 # TODO: Print results
 print(f'Best fit: {algo.best_fit}')
-plt.show()
+# Keep window plot open
+if plot_boolean: plt.show(block=True)

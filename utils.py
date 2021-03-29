@@ -2,9 +2,9 @@ import csv, itertools
 import random
 import sys
 import player as ply
+import time
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt2
-from matplotlib.animation import FuncAnimation
+# from matplotlib.animation import FuncAnimation
 
 (min_height, max_height) = (1.3, 2.0)
 
@@ -45,12 +45,23 @@ def print_algorithm_stats(algo):
           f'Diversity {round(algo.diversity, 4) * 100}%\n'
           f'Generation Changes {algo.generation_changes}\n')
 
-def plot_stats(algo, axi):
+def plot_stats(algo, axi, interval=0.3):
     axi[0].scatter(algo.generation_count, algo.best_fit.fitness(), c='red')
     axi[0].scatter(algo.generation_count, algo.worst_fit.fitness(), c='gold')
     axi[0].scatter(algo.generation_count, algo.avg_fitness, c='darkorange')
     axi[1].scatter(algo.generation_count, algo.diversity, c='green')
-    plt.pause(0.3)
+    # plt.pause(interval)
+    my_plt_pause(interval)
+
+def my_plt_pause(interval):
+    manager = plt._pylab_helpers.Gcf.get_active()
+    if manager is not None:
+        canvas = manager.canvas
+        if canvas.figure.stale:
+            canvas.draw_idle()        
+        canvas.start_event_loop(interval)
+    else:
+        time.sleep(interval)
 
 # x, y = [], []
 # def animate(value, gen):
