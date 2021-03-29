@@ -136,3 +136,4 @@ dmypy.json
 
 # Dataset folder
 /dataset
+/dataset_small
