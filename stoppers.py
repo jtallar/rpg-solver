@@ -25,6 +25,13 @@ class GenerationCountStopper(Stopper):
     def is_algorithm_over(self, algo):
         return algo.generation_count >= self.n
 
+class DiversityStopper(Stopper):
+    def __init__(self, max_count):
+        super().__init__(max_count)
+    
+    def is_algorithm_over(self, algo):
+        return algo.diversity <= self.n
+
 class AcceptableSolutionStopper(Stopper):
     def __init__(self, min_fitness):
         super().__init__(min_fitness)
