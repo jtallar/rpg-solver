@@ -93,18 +93,14 @@ class GeneticAlgorithm(object):
 
     def iterate(self):
         # Select K parents from player_collection
-        # TODO: Check si le pasamos generation_count o time
         parent_collection = self.function_config.parent_selectors.get_count(
             self.K, self.player_collection, self.generation_count)
 
         # Cross parents, generating K childs
-        # TODO: Ver si hace falta aplicar cierto shuffle sobre parent_collection 
-        #       --> Solo haria falta en elite, los otros y vuelven random
         child_collection = []
         for i in range(0, self.K - 1, 2):
             child_collection.extend(self.function_config.crossover_function(
                 parent_collection[i], parent_collection[i + 1]))
-        # TODO: Check this when K is odd
         # If last parent remained unmatched, add it to child collection
         if len(child_collection) != self.K:
             child_collection.append(parent_collection[self.K - 1])

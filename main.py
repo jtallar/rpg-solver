@@ -24,7 +24,6 @@ signal.signal(signal.SIGINT, signal_handler)
 
 start_time = time.time()
 
-# TODO: Ver si los nombres de las config tienen que ser si o si A, B, method1, etc o si podemos definirlas en el README
 # Read configurations from file
 with open("config.json") as file:
     config = json.load(file)

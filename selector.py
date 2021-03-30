@@ -95,9 +95,10 @@ class BoltzmannSelector(BaseRouletteSelector):
         self.k_factor = k_factor
 
     def temperature(self, time):
+        # Tc + (T0 - Tc) * exp(-k*t)
         return self.end_temperature + (self.init_temperature - self.end_temperature) * math.exp(-self.k_factor * time)
 
-    # TODO: Ver si time es numero de generacion o tiempo en segundos
+    # Time will be generation_count (could be time in seconds)
     def select(self, count, collection, time):
         # Calculate temperature
         temperature = self.temperature(time)
