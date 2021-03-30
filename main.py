@@ -110,6 +110,9 @@ if any(name == 'boltzmann' for name in selector_parent_list):
         config, "selector_A_boltzmann_tc", lambda el : float(el), lambda el : el <= 0 or el > selector_par_boltzmann_t0)
     selector_par_boltzmann_k = utils.read_config_param(
         config, "selector_A_boltzmann_k", lambda el : float(el), lambda el : el <= 0)
+# Check whether to shuffle or not parent output
+selector_par_shuffle = utils.read_config_param(
+    config, "selector_A_shuffle", lambda el : bool(el), lambda el : False)
 
 # Check parameters for replacement selectors
 selector_replace_list = [selector_m3_name, selector_m4_name]
@@ -176,6 +179,8 @@ if not stopper_list:
     print(f'Error in config. Some stopper must be turned on!')
     sys.exit(1)
 # Printing configuration
+print_stats_boolean = utils.read_config_param(
+    config, "print_stats", lambda el : bool(el), lambda el : False)
 plot_boolean = utils.read_config_param(
     config, "plot", lambda el : bool(el), lambda el : False)
 if plot_boolean:
@@ -220,7 +225,8 @@ print(f'---------------------------------------- \n'
 if mutation_instance_name == 'multi_limited': print(f'\tMutation M:\t{limited_multigen_m}')
 print(f'\n\tSelector A:\t{selector_A}\n'
       f'\tSelector m1:\t{selector_m1_name}\n'
-      f'\tSelector m2:\t{selector_m2_name}'
+      f'\tSelector m2:\t{selector_m2_name}\n'
+      f'\tShuffle:\t{selector_par_shuffle}'
 )
 if any_par_det_tournament: print(f'\tDet. Tour. M:\t{selector_par_det_m}')
 if any_par_prob_tournament: print(f'\tProb. Tour. Th:\t{selector_par_prob_th}')
@@ -278,7 +284,8 @@ for sel_name in selector_replace_list:
 parent_selectors = sel.CombinedSelector(
     selector_list[0], 
     selector_list[1],
-    selector_A)
+    selector_A,
+    selector_par_shuffle)
 replace_selectors = sel.CombinedSelector(
     selector_list[2], 
     selector_list[3],
@@ -325,12 +332,12 @@ if plot_boolean:
     # Show figure window
     plt.show(block=False)
 
-utils.print_algorithm_stats(algo)
+if print_stats_boolean: utils.print_algorithm_stats(algo)
 if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time, True)
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
-    utils.print_algorithm_stats(algo)
+    if print_stats_boolean: utils.print_algorithm_stats(algo)
     if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time)
 
 end_time = time.time()

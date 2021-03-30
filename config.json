@@ -19,6 +19,7 @@
 	"A": 0.75,
 	"selector_method_1": "elite",
 	"selector_method_2": "deterministic_tournament",
+	"selector_A_shuffle": false,
 	"selector_A_det_tournament_m": 3,
 	"selector_A_prob_tournament_th": 0.8,
 	"selector_A_boltzmann_t0": 10.0,
@@ -55,6 +56,7 @@
 	"random_seed_on": false,
 	"random_seed": "RANDOM_SEED",
 
+	"print_stats": true,
 	"plot": true,
 	"plot_interval_time": 0.3
 }

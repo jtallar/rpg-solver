@@ -159,7 +159,7 @@ class ProbabilisticTournamentSelector(Selector):
         return selected
 
 class CombinedSelector(object):
-    def __init__(self, method_1_instance, method_2_instance, percentage_m1):
+    def __init__(self, method_1_instance, method_2_instance, percentage_m1, shuffle=False):
         """Returns a Combined Selector object with given methods
         
         Parameters
@@ -174,6 +174,7 @@ class CombinedSelector(object):
         self.method_1_instance = method_1_instance
         self.method_2_instance = method_2_instance
         self.percentage_m1 = percentage_m1
+        self.shuffle = shuffle
     
     def get_count(self, count, collection, time=0):
         # Take percentage_m1 * count from method 1 and (1 - percentage_m1) from methodd 2
@@ -189,6 +190,7 @@ class CombinedSelector(object):
             second_sel = self.apply_method(self.method_2_instance, count_m2, collection, time)
 
         first_sel.extend(second_sel)
+        if self.shuffle: random.shuffle(first_sel)
         return first_sel
 
     def apply_method(self, method_instance, count, collection, time):

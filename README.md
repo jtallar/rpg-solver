@@ -56,6 +56,7 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
     - `deterministic_tournament` --> Selector por torneo determinístico (donde M es `selector_A_det_tournament_m`)
     - `probabilistic_tournament` --> Selector por torneo probabilístico (donde Th es `selector_A_prob_tournament_th`)
 - **selector_method_2** indica el método de selección de padres a utilizar como método 2. Los valores posibles son los mismos que los de `selector_method_1`.
+- **selector_A_shuffle** indica si se mezcla (true) o no (false) la salida del selector de padres previo a realizar el cruce.
 - **selector_A_det_tournament_m** indica el valor de M para el selector por torneo determinístico en caso de elegir dicho selector de padres. Debe estar entre 1 y N.
 - **selector_A_prob_tournament_th** indica el valor de Threshold para el selector por torneo probabilístico en caso de elegir dicho selector de padres. Debe estar entre 0.5 y 1.
 - **selector_A_boltzmann_t0** indica el valor de T0 para el selector boltzmann en caso de elegir dicho selector de padres.
@@ -101,6 +102,7 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 - **random_seed_on** indica si se utiliza (true) o no (false) una semilla particular para la generación de valores aleatorios, donde el valor es `random_seed`. Permite realizar ejecuciones determinísticas.
 - **random_seed** indica el valor utilizar como semilla para la generación de valores aleatorios en caso de habilitar el uso de una semilla particular.
 
+- **print_stats** indica si se desea imprimir los valores obtenidos de fitness, diversidad y cambios generación a generación.
 - **plot** indica si se desea imprimir el gráfico en tiempo real con los valores de fitness y diversidad obtenidos generación a generación.
 - **plot_interval_time** indica el tiempo a esperar entre cada generación para una visualización correcta del gráfico en tiempo real en caso de habilitar el plotteo.
 
