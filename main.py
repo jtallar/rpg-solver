@@ -173,7 +173,6 @@ print(f'Load Configuration \t ⏱  {round(end_time - start_time, 6)} seconds')
 start_time = end_time
 
 # Parse each TSV to get List of possible value for each equipment type
-# TODO: Si parto de N equipments posibles en cada caso, puedo luego tomar uno que no haya salido al principio al mutar, no?
 weapon_list = utils.read_equipment_tsv(config["armas_file"], ply.EquipmentType.Weapon, max_rows)
 boots_list = utils.read_equipment_tsv(config["botas_file"], ply.EquipmentType.Boots, max_rows)
 helmet_list = utils.read_equipment_tsv(config["cascos_file"], ply.EquipmentType.Helmet, max_rows)
