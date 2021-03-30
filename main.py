@@ -326,7 +326,7 @@ if plot_boolean:
     plt.show(block=False)
 
 utils.print_algorithm_stats(algo)
-if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time)
+if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time, True)
 while not algo.is_algorithm_over():
     curr_gen = algo.iterate()
     # print(f'Generation {algo.generation_count}\n{curr_gen}')
@@ -339,4 +339,6 @@ print(f'Algorithm Run Completed by {algo.current_stopper} \t ⏱  {round(end_tim
 # Print result
 print(f'Best fit: {algo.best_fit}')
 # Keep window plot open
-if plot_boolean: plt.show(block=True)
+if plot_boolean: 
+    _.legend(loc='upper center', ncol=2)
+    plt.show(block=True)

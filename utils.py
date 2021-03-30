@@ -51,11 +51,11 @@ def print_algorithm_stats(algo):
           f'Diversity {round(algo.diversity * 100, ply.Player.FIT_DEC_COUNT)}%  '
           f'Generation Changes {algo.generation_changes}\n')
 
-def plot_stats(algo, axi, interval=0.3):
-    axi[0].scatter(algo.generation_count, algo.best_fit.fitness(), c='red')
-    axi[0].scatter(algo.generation_count, algo.worst_fit.fitness(), c='gold')
-    axi[0].scatter(algo.generation_count, algo.avg_fitness, c='darkorange')
-    axi[1].scatter(algo.generation_count, algo.diversity, c='green')
+def plot_stats(algo, axi, interval=0.3, label_on=False):
+    axi[0].scatter(algo.generation_count, algo.best_fit.fitness(), c='red', label='Best fitness' if label_on else '')
+    axi[0].scatter(algo.generation_count, algo.worst_fit.fitness(), c='gold', label='Worst fitness' if label_on else '')
+    axi[0].scatter(algo.generation_count, algo.avg_fitness, c='darkorange', label='Average fitness' if label_on else '')
+    axi[1].scatter(algo.generation_count, algo.diversity, c='green', label='Diversity' if label_on else '')
     # plt.pause(interval)
     my_plt_pause(interval)
 
