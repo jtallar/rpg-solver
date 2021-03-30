@@ -32,6 +32,7 @@
 	"stopper": "content",
 	"stopper_n": 10,
 	"stopper_r": 0.8,
+	"fitness_delta": 1e-4,
 	"plot": true,
 	"plot_interval_time": 0.3
 }

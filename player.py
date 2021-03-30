@@ -198,6 +198,11 @@ class Player(object):
         # Initialize stat saved values to None, will be calculated and stored on demand
         self.reset_saved_values()
 
+    @classmethod
+    def set_fitness_delta(cls, delta):
+        cls.FIT_ABS_TOL = delta
+        cls.FIT_DEC_COUNT = int(abs(math.log10(delta)))
+
     def reset_saved_values(self):
         self.s_player_stats = None
         self.s_attack_mod = None
