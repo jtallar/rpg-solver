@@ -174,25 +174,23 @@ class Player(object):
         
         self.player_class = player_class
         self.height = height
-        # TODO: Check si vale la pena hacer los chequeos de equipment_type
-        if weapon.equipment_type != EquipmentType.Weapon:
-            raise ValueError("Not a weapon!")
+
+        # We assume each equipment_type will be valid, gaining performance
+        # if weapon.equipment_type != EquipmentType.Weapon:
+        #     raise ValueError("Not a weapon!")
+        # if boots.equipment_type != EquipmentType.Boots:
+        #     raise ValueError("Not boots!")
+        # if helmet.equipment_type != EquipmentType.Helmet:
+        #     raise ValueError("Not a helmet!")
+        # if gloves.equipment_type != EquipmentType.Gloves:
+        #     raise ValueError("Not gloves!")
+        # if armor.equipment_type != EquipmentType.Armor:
+        #     raise ValueError("Not an armor!")
+
         self.weapon = weapon
-
-        if boots.equipment_type != EquipmentType.Boots:
-            raise ValueError("Not boots!")
         self.boots = boots
-
-        if helmet.equipment_type != EquipmentType.Helmet:
-            raise ValueError("Not a helmet!")
         self.helmet = helmet
-
-        if gloves.equipment_type != EquipmentType.Gloves:
-            raise ValueError("Not gloves!")
         self.gloves = gloves
-
-        if armor.equipment_type != EquipmentType.Armor:
-            raise ValueError("Not an armor!")
         self.armor = armor
 
         # Initialize stat saved values to None, will be calculated and stored on demand
