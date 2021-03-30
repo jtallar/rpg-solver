@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # Define signal handler for Ctrl+C for ordered interrupt
 def signal_handler(sig, frame):
     if algo and start_time:
-        print(f'\nAlgorithm Run Interrupted \t\t ⏱  {round(time.time() - start_time, 6)} seconds\n----------------------------------------\n')
+        print(f'\nAlgorithm Run Interrupted by Ctrl+C \t\t ⏱  {round(time.time() - start_time, 6)} seconds\n----------------------------------------\n')
         print(f'Best fit so far: {algo.best_fit}')
     print('\nExiting by SIGINT...')
     sys.exit(2)
@@ -145,22 +145,36 @@ implementation_dic = {
     'fill-parent': False}
 implementation_name = utils.read_config_param(
     config, "implementation", lambda el : el, lambda el : el not in implementation_dic)
-# Stopper function
-stopper_dic = {
-    'time': stp.TimeStopper, 
-    'generation_count': stp.GenerationCountStopper, 
-    'acceptable_solution': stp.AcceptableSolutionStopper, 
-    'structural': stp.StructuralStopper,
-    'content': stp.ContentStopper}
-stopper_instance_name = utils.read_config_param(
-    config, "stopper", lambda el : el, lambda el : el not in stopper_dic)
-# Stopper n - first param
-stopper_n = utils.read_config_param(
-    config, "stopper_n", lambda el : float(el), lambda el : el <= 0)
-# If stopper is structural, read r value
-if stopper_instance_name == 'structural':
-    stopper_r = utils.read_config_param(
-        config, "stopper_r", lambda el : float(el), lambda el : el <= 0 or el > 1)
+# Stopper functions
+stopper_instance_dic = {
+    'stopper_time_on': stp.TimeStopper, 
+    'stopper_generation_count_on': stp.GenerationCountStopper, 
+    'stopper_diversity_on': stp.DiversityStopper, 
+    'stopper_acceptable_on': stp.AcceptableSolutionStopper, 
+    'stopper_structural_on': stp.StructuralStopper,
+    'stopper_content_on': stp.ContentStopper}
+stopper_params_dic = {
+    'stopper_time_on': ['stop_time_sec'], 
+    'stopper_generation_count_on': ['stop_generation_count'], 
+    'stopper_diversity_on': ['stop_diversity_proportion'], 
+    'stopper_acceptable_on': ['stop_acceptable_fitness'], 
+    'stopper_structural_on': ['stop_structural_gen_count', 'stop_structural_proportion'],
+    'stopper_content_on': ['stop_content_gen_count']}
+stopper_list = []
+for name in stopper_instance_dic:
+    stopper_boolean = utils.read_config_param(
+        config, name, lambda el : bool(el), lambda el : False)
+    if stopper_boolean:
+        param_list = []
+        for param_name in stopper_params_dic[name]:
+            param_list.append(utils.read_config_param(
+                config, param_name, lambda el : float(el), lambda el : False))
+        if not stopper_instance_dic[name].is_param_list_valid(param_list):
+            utils.invalid_param(stopper_params_dic[name])
+        stopper_list.append(stopper_instance_dic[name].new_from_param_list(param_list))
+if not stopper_list:
+    print(f'Error in config. Some stopper must be turned on!')
+    sys.exit(1)
 # Printing configuration
 plot_boolean = utils.read_config_param(
     config, "plot", lambda el : bool(el), lambda el : False)
@@ -219,11 +233,9 @@ if any_rep_boltzmann:
           f'\tBoltzmann TC:\t{selector_rep_boltzmann_tc}\n'
           f'\tBoltzmann K:\t{selector_rep_boltzmann_k}'
     )
-print(f'\n\tImplementation:\t{implementation_name}\n'
-      f'\tStopper:\t{stopper_instance_name}\n'
-      f'\tStopper n:\t{stopper_n}'
-)
-if stopper_instance_name == 'structural': print(f'\tStopper r:\t{stopper_r}')
+print(f'\n\tImplementation:\t{implementation_name}')
+for stopper in stopper_list:
+    print(f'\tStopper:\t{stopper}')
 print('----------------------------------------')
 
 # Create Generation 0
@@ -274,11 +286,7 @@ else:
         mutation_probability,
         weapon_list, boots_list, helmet_list, gloves_list, armor_list
     )
-
-if stopper_instance_name == 'structural':
-    stopper = stopper_dic[stopper_instance_name](stopper_n, stopper_r)
-else:
-    stopper = stopper_dic[stopper_instance_name](stopper_n)
+# Stopper List already built in stopper_list
 
 # Create algorithm function configuration
 algo_fun_config = gen.AlgorithmFunctionsConfig(
@@ -286,7 +294,7 @@ algo_fun_config = gen.AlgorithmFunctionsConfig(
     replace_selectors,
     crossover_dic[crossover_fun_name],
     mutation,
-    stopper
+    stopper_list
 )
 
 start_time = time.time()
@@ -319,7 +327,7 @@ while not algo.is_algorithm_over():
     if plot_boolean: utils.plot_stats(algo, axi, plot_interval_time)
 
 end_time = time.time()
-print(f'Algorithm Run Completed \t\t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
+print(f'Algorithm Run Completed by {algo.current_stopper} \t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
 
 # Print result
 print(f'Best fit: {algo.best_fit}')

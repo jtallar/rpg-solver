@@ -5,13 +5,17 @@
 	"guantes_file": "dataset/guantes.tsv",
 	"pecheras_file": "dataset/pecheras.tsv",
 	"max_rows_tsv": 100,
+
 	"player_class": "guerrero",
 	"N": 100,
 	"K": 30,
+
 	"crossover": "one_point",
+
 	"mutation": "multi_uniform",
 	"mutation_probability": 0.1,
 	"limited_multigen_m": 6,
+
 	"A": 0.75,
 	"selector_method_1": "elite",
 	"selector_method_2": "deterministic_tournament",
@@ -20,6 +24,7 @@
 	"selector_A_boltzmann_t0": 10.0,
 	"selector_A_boltzmann_tc": 1.0,
 	"selector_A_boltzmann_k": 0.2,
+
 	"B": 1.0,
 	"selector_method_3": "elite",
 	"selector_method_4": "boltzmann",
@@ -28,10 +33,23 @@
 	"selector_B_boltzmann_t0": 10.0,
 	"selector_B_boltzmann_tc": 1.0,
 	"selector_B_boltzmann_k": 0.2,
+
 	"implementation": "fill-all",
-	"stopper": "content",
-	"stopper_n": 10,
-	"stopper_r": 0.8,
+
+	"stopper_time_on": true,
+	"stop_time_sec": 1000.0,
+	"stopper_generation_count_on": true,
+	"stop_generation_count": 100,
+	"stopper_diversity_on": true,
+	"stop_diversity_proportion": 0.05,
+	"stopper_acceptable_on": true,
+	"stop_acceptable_fitness": 23.0,
+	"stopper_structural_on": true,
+	"stop_structural_gen_count": 10,
+	"stop_structural_proportion": 0.8,
+	"stopper_content_on": true,
+	"stop_content_gen_count": 10,
+
 	"fitness_delta": 1e-4,
 	"plot": true,
 	"plot_interval_time": 0.3

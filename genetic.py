@@ -1,7 +1,7 @@
 import time
 
 class AlgorithmFunctionsConfig(object):
-    def __init__(self, parent_selectors, replace_selectors, crossover_function, mutation_instance, stop_instance):
+    def __init__(self, parent_selectors, replace_selectors, crossover_function, mutation_instance, stop_instance_list):
         """Returns a Genetic Algorithm Functions instance
         
         Parameters
@@ -14,15 +14,15 @@ class AlgorithmFunctionsConfig(object):
             Function used to perform crossover between 2 parents, generating 2 childs
         mutation_instance : Mutation
             Instance used to perform mutations on a player
-        stop_instance : Stopper
-            Instance used to determine when to stop iteration
+        stop_instance_list : List of Stopper
+            List of instances used to determine when to stop iteration
         """
 
         self.parent_selectors = parent_selectors
         self.replace_selectors = replace_selectors
         self.crossover_function = crossover_function
         self.mutation_instance = mutation_instance
-        self.stop_instance = stop_instance
+        self.stop_instance_list = stop_instance_list
 
 
 class GeneticAlgorithm(object):
@@ -51,6 +51,7 @@ class GeneticAlgorithm(object):
         self.generation_count = 0
         self.previous_generation = {}
         self.update_algo_stats()
+        self.current_stopper = None
 
     def update_algo_stats(self):
         generation_changes = 0
@@ -88,7 +89,7 @@ class GeneticAlgorithm(object):
         self.diversity = len(current_generation) / self.N
 
     def is_algorithm_over(self):
-        return self.function_config.stop_instance.is_algorithm_over(self)
+        return any(stopper.is_algorithm_over(self) for stopper in self.function_config.stop_instance_list)
 
     def iterate(self):
         # Select K parents from player_collection

@@ -8,13 +8,16 @@ import matplotlib.pyplot as plt
 
 (min_height, max_height) = (1.3, 2.0)
 
+def invalid_param(param_name):
+    print(f'Error in config. Invalid or missing {param_name}!')
+    sys.exit(1)
+
 def read_config_param(config, param_name, converter_fun, invalid_fun):
     if param_name in config:
         param = converter_fun(config[param_name])
         if not invalid_fun(param):
             return param
-    print(f'Error in config. Invalid or missing {param_name}!')
-    sys.exit(1)
+    invalid_param(param_name)
 
 def read_equipment_tsv(filename, equipment_type, max_rows):
     with open(filename) as file:
