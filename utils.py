@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 
 (min_height, max_height) = (1.3, 2.0)
 
+def set_random_seed(seed):
+    random.seed(seed)
+
 def invalid_param(param_name):
     print(f'Error in config. Invalid or missing {param_name}!')
     sys.exit(1)

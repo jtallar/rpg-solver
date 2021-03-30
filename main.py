@@ -180,9 +180,13 @@ plot_boolean = utils.read_config_param(
 if plot_boolean:
     plot_interval_time = utils.read_config_param(
         config, "plot_interval_time", lambda el : float(el), lambda el : el < 0)
+# Fitness delta configuration
 fitness_delta = utils.read_config_param(
     config, "fitness_delta", lambda el : float(el), lambda el : el <= 0)
 ply.Player.set_fitness_delta(fitness_delta)
+# Random seed (if provided)
+if "random_seed" in config:
+    utils.set_random_seed(config["random_seed"])
 
 end_time = time.time()
 print(f'Load Configuration \t ⏱  {round(end_time - start_time, 6)} seconds')

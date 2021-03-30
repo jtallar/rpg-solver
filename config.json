@@ -51,6 +51,9 @@
 	"stop_content_gen_count": 10,
 
 	"fitness_delta": 1e-4,
+
+	"random_seed": "RANDOM_SEED",
+
 	"plot": true,
 	"plot_interval_time": 0.3
 }
