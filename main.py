@@ -87,28 +87,53 @@ selector_m3_name = utils.read_config_param(
     config, "selector_method_3", lambda el : el, lambda el : el not in selector_dic)
 selector_m4_name = utils.read_config_param(
     config, "selector_method_4", lambda el : el, lambda el : el not in selector_dic)
-selector_name_list = [selector_m1_name, selector_m2_name, selector_m3_name, selector_m4_name]
-# TODO: Check si hace falta que pueda combinar distintos boltzmann o tournaments (para distintos mi)
-(any_det_tournament, any_prob_tournament, any_boltzmann) = (False, False, False)
+
+# Check parameters for parent selectors
+selector_parent_list = [selector_m1_name, selector_m2_name]
+(any_par_det_tournament, any_par_prob_tournament, any_par_boltzmann) = (False, False, False)
 # If any selector is deterministic_tournament, read M value
-if any(name == 'deterministic_tournament' for name in selector_name_list):
-    any_det_tournament = True
-    selector_det_m = utils.read_config_param(
-        config, "selector_det_tournament_m", lambda el : int(el), lambda el : el < 1 or el > N)
+if any(name == 'deterministic_tournament' for name in selector_parent_list):
+    any_par_det_tournament = True
+    selector_par_det_m = utils.read_config_param(
+        config, "selector_A_det_tournament_m", lambda el : int(el), lambda el : el < 1 or el > N)
 # If any selector is probabilistic_tournament, read Threshold value
-if any(name == 'probabilistic_tournament' for name in selector_name_list):
-    any_prob_tournament = True
-    selector_prob_th = utils.read_config_param(
-        config, "selector_prob_tournament_th", lambda el : float(el), lambda el : el < 0.5 or el > 1)
+if any(name == 'probabilistic_tournament' for name in selector_parent_list):
+    any_par_prob_tournament = True
+    selector_par_prob_th = utils.read_config_param(
+        config, "selector_A_prob_tournament_th", lambda el : float(el), lambda el : el < 0.5 or el > 1)
 # If any selector is boltzmann, read T0 and Tc
-if any(name == 'boltzmann' for name in selector_name_list):
-    any_boltzmann = True
-    selector_boltzmann_t0 = utils.read_config_param(
-        config, "selector_boltzmann_t0", lambda el : float(el), lambda el : el <= 0)
-    selector_boltzmann_tc = utils.read_config_param(
-        config, "selector_boltzmann_tc", lambda el : float(el), lambda el : el <= 0 or el > selector_boltzmann_t0)
-    selector_boltzmann_k = utils.read_config_param(
-        config, "selector_boltzmann_k", lambda el : float(el), lambda el : el <= 0)
+if any(name == 'boltzmann' for name in selector_parent_list):
+    any_par_boltzmann = True
+    selector_par_boltzmann_t0 = utils.read_config_param(
+        config, "selector_A_boltzmann_t0", lambda el : float(el), lambda el : el <= 0)
+    selector_par_boltzmann_tc = utils.read_config_param(
+        config, "selector_A_boltzmann_tc", lambda el : float(el), lambda el : el <= 0 or el > selector_par_boltzmann_t0)
+    selector_par_boltzmann_k = utils.read_config_param(
+        config, "selector_A_boltzmann_k", lambda el : float(el), lambda el : el <= 0)
+
+# Check parameters for replacement selectors
+selector_replace_list = [selector_m3_name, selector_m4_name]
+(any_rep_det_tournament, any_rep_prob_tournament, any_rep_boltzmann) = (False, False, False)
+# If any selector is deterministic_tournament, read M value
+if any(name == 'deterministic_tournament' for name in selector_replace_list):
+    any_rep_det_tournament = True
+    selector_rep_det_m = utils.read_config_param(
+        config, "selector_B_det_tournament_m", lambda el : int(el), lambda el : el < 1 or el > N)
+# If any selector is probabilistic_tournament, read Threshold value
+if any(name == 'probabilistic_tournament' for name in selector_replace_list):
+    any_rep_prob_tournament = True
+    selector_rep_prob_th = utils.read_config_param(
+        config, "selector_B_prob_tournament_th", lambda el : float(el), lambda el : el < 0.5 or el > 1)
+# If any selector is boltzmann, read T0 and Tc
+if any(name == 'boltzmann' for name in selector_replace_list):
+    any_rep_boltzmann = True
+    selector_rep_boltzmann_t0 = utils.read_config_param(
+        config, "selector_B_boltzmann_t0", lambda el : float(el), lambda el : el <= 0)
+    selector_rep_boltzmann_tc = utils.read_config_param(
+        config, "selector_B_boltzmann_tc", lambda el : float(el), lambda el : el <= 0 or el > selector_rep_boltzmann_t0)
+    selector_rep_boltzmann_k = utils.read_config_param(
+        config, "selector_B_boltzmann_k", lambda el : float(el), lambda el : el <= 0)
+
 # Selector A and B percentages
 selector_A = utils.read_config_param(
     config, "A", lambda el : float(el), lambda el : el < 0 or el > 1)
@@ -170,21 +195,29 @@ print(f'---------------------------------------- \n'
       f'\tMutation prob:\t{mutation_probability}'
 )
 if mutation_instance_name == 'multi_limited': print(f'\tMutation M:\t{limited_multigen_m}')
-print(f'\tSelector A:\t{selector_A}\n'
+print(f'\n\tSelector A:\t{selector_A}\n'
       f'\tSelector m1:\t{selector_m1_name}\n'
-      f'\tSelector m2:\t{selector_m2_name}\n'
-      f'\tSelector B:\t{selector_B}\n'
+      f'\tSelector m2:\t{selector_m2_name}'
+)
+if any_par_det_tournament: print(f'\tDet. Tour. M:\t{selector_par_det_m}')
+if any_par_prob_tournament: print(f'\tProb. Tour. Th:\t{selector_par_prob_th}')
+if any_par_boltzmann: 
+    print(f'\tBoltzmann T0:\t{selector_par_boltzmann_t0}\n'
+          f'\tBoltzmann TC:\t{selector_par_boltzmann_tc}\n'
+          f'\tBoltzmann K:\t{selector_par_boltzmann_k}'
+    )
+print(f'\n\tSelector B:\t{selector_B}\n'
       f'\tSelector m3:\t{selector_m3_name}\n'
       f'\tSelector m4:\t{selector_m4_name}'
 )
-if any_det_tournament: print(f'\tDet. Tour. M:\t{selector_det_m}')
-if any_prob_tournament: print(f'\tProb. Tour. Th:\t{selector_prob_th}')
-if any_boltzmann: 
-    print(f'\tBoltzmann T0:\t{selector_boltzmann_t0}\n'
-          f'\tBoltzmann TC:\t{selector_boltzmann_tc}\n'
-          f'\tBoltzmann K:\t{selector_boltzmann_k}'
+if any_rep_det_tournament: print(f'\tDet. Tour. M:\t{selector_rep_det_m}')
+if any_rep_prob_tournament: print(f'\tProb. Tour. Th:\t{selector_rep_prob_th}')
+if any_rep_boltzmann: 
+    print(f'\tBoltzmann T0:\t{selector_rep_boltzmann_t0}\n'
+          f'\tBoltzmann TC:\t{selector_rep_boltzmann_tc}\n'
+          f'\tBoltzmann K:\t{selector_rep_boltzmann_k}'
     )
-print(f'\tImplementation:\t{implementation_name}\n'
+print(f'\n\tImplementation:\t{implementation_name}\n'
       f'\tStopper:\t{stopper_instance_name}\n'
       f'\tStopper n:\t{stopper_n}'
 )
@@ -199,13 +232,24 @@ base_generation = utils.generate_players(
 # print("Generation 0\n", base_generation)
 
 selector_list = []
-for sel_name in selector_name_list:
+for sel_name in selector_parent_list:
     if sel_name == 'deterministic_tournament':
-        selector = selector_dic[sel_name](selector_det_m)
+        selector = selector_dic[sel_name](selector_par_det_m)
     elif sel_name == 'probabilistic_tournament':
-        selector = selector_dic[sel_name](selector_prob_th)
+        selector = selector_dic[sel_name](selector_par_prob_th)
     elif sel_name == 'boltzmann':
-        selector = selector_dic[sel_name](selector_boltzmann_t0, selector_boltzmann_tc, selector_boltzmann_k)
+        selector = selector_dic[sel_name](selector_par_boltzmann_t0, selector_par_boltzmann_tc, selector_par_boltzmann_k)
+    else:
+        selector = selector_dic[sel_name]()
+    selector_list.append(selector)
+
+for sel_name in selector_replace_list:
+    if sel_name == 'deterministic_tournament':
+        selector = selector_dic[sel_name](selector_rep_det_m)
+    elif sel_name == 'probabilistic_tournament':
+        selector = selector_dic[sel_name](selector_rep_prob_th)
+    elif sel_name == 'boltzmann':
+        selector = selector_dic[sel_name](selector_rep_boltzmann_t0, selector_rep_boltzmann_tc, selector_rep_boltzmann_k)
     else:
         selector = selector_dic[sel_name]()
     selector_list.append(selector)
