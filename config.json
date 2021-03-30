@@ -4,7 +4,7 @@
 	"cascos_file": "dataset/cascos.tsv",
 	"guantes_file": "dataset/guantes.tsv",
 	"pecheras_file": "dataset/pecheras.tsv",
-	"max_rows_tsv": 100,
+	"max_rows_tsv": 1000000,
 
 	"player_class": "guerrero",
 	"N": 100,
@@ -52,6 +52,7 @@
 
 	"fitness_delta": 1e-4,
 
+	"random_seed_on": false,
 	"random_seed": "RANDOM_SEED",
 
 	"plot": true,

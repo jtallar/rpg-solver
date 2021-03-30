@@ -23,6 +23,7 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 start_time = time.time()
+algo = None
 
 # Read configurations from file
 with open("config.json") as file:
@@ -184,9 +185,12 @@ if plot_boolean:
 fitness_delta = utils.read_config_param(
     config, "fitness_delta", lambda el : float(el), lambda el : el <= 0)
 ply.Player.set_fitness_delta(fitness_delta)
-# Random seed (if provided)
-if "random_seed" in config:
-    utils.set_random_seed(config["random_seed"])
+# Random seed configuration
+random_seed_boolean = utils.read_config_param(
+    config, "random_seed_on", lambda el : bool(el), lambda el : False)
+if random_seed_boolean:
+    utils.set_random_seed(utils.read_config_param(
+        config, "random_seed", lambda el : el, lambda el : False))
 
 end_time = time.time()
 print(f'Load Configuration \t ⏱  {round(end_time - start_time, 6)} seconds')
