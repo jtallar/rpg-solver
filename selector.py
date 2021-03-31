@@ -178,7 +178,6 @@ class CombinedSelector(object):
     
     def get_count(self, count, collection, time=0):
         # Take percentage_m1 * count from method 1 and (1 - percentage_m1) from methodd 2
-        # param_m1 or param_m2 might be 0, check with is not None
         first_sel = second_sel = []
         count_m1 = round(count * self.percentage_m1)
         count_m2 = count - count_m1
