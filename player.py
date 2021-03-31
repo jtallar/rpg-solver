@@ -149,7 +149,7 @@ class Player(object):
     HELMET_POS, GLOVES_POS, ARMOR_POS = 3, 4, 5
 
     FIT_ABS_TOL = 1e-4
-    FIT_DEC_COUNT = int(abs(math.log10(FIT_ABS_TOL)))
+    FIT_DEC_COUNT = math.ceil(abs(math.log10(FIT_ABS_TOL)))
 
     def __init__(self, player_class, height, weapon, boots, helmet, gloves, armor):
         """Returns a Player object with the given height and equipments
@@ -199,7 +199,7 @@ class Player(object):
     @classmethod
     def set_fitness_delta(cls, delta):
         cls.FIT_ABS_TOL = delta
-        cls.FIT_DEC_COUNT = int(abs(math.log10(delta)))
+        cls.FIT_DEC_COUNT = math.ceil(abs(math.log10(delta)))
 
     def reset_saved_values(self):
         self.s_player_stats = None
