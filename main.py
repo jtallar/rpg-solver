@@ -185,7 +185,7 @@ plot_boolean = utils.read_config_param(
     config, "plot", lambda el : bool(el), lambda el : False)
 if plot_boolean:
     plot_interval_time = utils.read_config_param(
-        config, "plot_interval_time", lambda el : float(el), lambda el : el < 0)
+        config, "plot_interval_time", lambda el : float(el), lambda el : el <= 0)
 # Fitness delta configuration
 fitness_delta = utils.read_config_param(
     config, "fitness_delta", lambda el : float(el), lambda el : el <= 0)
