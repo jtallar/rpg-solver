@@ -97,7 +97,7 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 - **stopper_content_on** indica si se utiliza (true) o no (false) el criterio de corte por contenido con parámetro `stop_content_gen_count`.
 - **stop_content_gen_count** indica la la cantidad de generaciones durante la cual el mejor fitness no debe cambiar para interrumpir el algoritmo genético en caso de habilitar el criterio de corte por contenido.
 
-- **fitness_delta** indica la tolerancia absoluta a considerar para determinar que dos valores de fitness son iguales.
+- **fitness_delta** indica la tolerancia absoluta a considerar para determinar que dos valores de fitness son iguales. Debe ser un valor en la forma 1eX.
 
 - **random_seed_on** indica si se utiliza (true) o no (false) una semilla particular para la generación de valores aleatorios, donde el valor es `random_seed`. Permite realizar ejecuciones determinísticas.
 - **random_seed** indica el valor utilizar como semilla para la generación de valores aleatorios en caso de habilitar el uso de una semilla particular.
