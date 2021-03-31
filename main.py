@@ -189,7 +189,7 @@ if plot_boolean:
         config, "plot_interval_time", lambda el : float(el), lambda el : el <= 0)
 # Fitness delta configuration
 fitness_delta = utils.read_config_param(
-    config, "fitness_delta", lambda el : float(el), lambda el : el <= 0 or math.log10(el) != round(math.log10(el)))
+    config, "fitness_delta", lambda el : float(el), lambda el : el <= 0 or el > 1 or math.log10(el) != round(math.log10(el)))
 ply.Player.set_fitness_delta(fitness_delta)
 # Random seed configuration
 random_seed_boolean = utils.read_config_param(
