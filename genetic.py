@@ -126,18 +126,18 @@ class GeneticAlgorithm(object):
         # Select N from N (actual) + K (childs)
         child_collection.extend(self.player_collection)
         return self.function_config.replace_selectors.get_count(
-            self.N, child_collection
+            self.N, child_collection, self.generation_count
         )
     
     def do_fill_parent(self, child_collection):
         if self.K > self.N:
             # Select N from K (childs)
             return self.function_config.replace_selectors.get_count(
-                self.N, child_collection
+                self.N, child_collection, self.generation_count
             )
         # K <= N
         # K childs + Select N-K from N (actual)
         child_collection.extend(self.function_config.replace_selectors.get_count(
-            self.N - self.K, self.player_collection
+            self.N - self.K, self.player_collection, self.generation_count
         ))
         return child_collection
