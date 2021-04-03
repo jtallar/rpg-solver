@@ -42,7 +42,7 @@ N = 100
 
 # Child count
 K = 30
-
+i = 0
 crossover_dic = {
     'one_point': cros.Crossover.one_point,
     'two_points': cros.Crossover.two_points,
@@ -264,8 +264,11 @@ for crossover_fun_name in crossover_dic:
                                         while not algo.is_algorithm_over():
                                             curr_gen = algo.iterate()
 
-                                        if algo.best_fit.fitness() > 24.0:
+                                        i = i + 1
+                                        if algo.best_fit.fitness() > 25.0:
                                             # Print config params
+                                            print(f'---------------------------------------- \n')
+                                            print(f'\tIteration Number:\t{i}')
                                             print(f'---------------------------------------- \n'
                                                   f'Run parameters\n'
                                                   f'\tPlayer class:\tguerrero\n'
