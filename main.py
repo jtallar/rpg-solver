@@ -109,7 +109,7 @@ if not stopper_list:
 ply.Player.set_fitness_delta(1e-4)
 
 # Random seed configuration
-utils.set_random_seed("SUPER_RANDOM_SEED")
+#utils.set_random_seed("SUPER_RANDOM_SEED")
 
 
 for crossover_fun_name in crossover_dic:
