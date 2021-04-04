@@ -38,22 +38,16 @@ armor_list = utils.read_equipment_tsv("dataset/pecheras.tsv", ply.EquipmentType.
 
 
 # Population count
-N = 100
+N = 50000
 
 # Child count
-K = 30
+K = 40000
 i = 0
 crossover_dic = {
-    'one_point': cros.Crossover.one_point,
-    'two_points': cros.Crossover.two_points,
-    'ring': cros.Crossover.ring,
     'uniform': cros.Crossover.uniform}
 
 mutation_dic = {
-    'simple_gen': mut.SimpleGen,
-    'multi_limited': mut.MultiLimited,
-    'multi_uniform': mut.MultiUniform,
-    'full': mut.Full}
+    'multi_uniform': mut.MultiUniform}
 
 selector_dic = {
     'elite': sel.EliteSelector,
@@ -61,12 +55,19 @@ selector_dic = {
     'universal': sel.UniversalSelector,
     'ranking': sel.RankingSelector,
     'boltzmann': sel.BoltzmannSelector,
-    'deterministic_tournament': sel.DeterministicTournamentSelector,
     'probabilistic_tournament': sel.ProbabilisticTournamentSelector}
 
+selector_dic_full_full = {
+'elite': sel.EliteSelector,
+'roulette': sel.RouletteSelector,
+'universal': sel.UniversalSelector,
+'ranking': sel.RankingSelector,
+'boltzmann': sel.BoltzmannSelector,
+'deterministic_tournament': sel.DeterministicTournamentSelector,
+'probabilistic_tournament': sel.ProbabilisticTournamentSelector}
+
 implementation_dic = {
-    'fill-all': True,
-    'fill-parent': False}
+    'fill-all': True}
 
 stopper_instance_dic = {
     'stopper_time_on': stp.TimeStopper,
@@ -109,210 +110,201 @@ if not stopper_list:
 ply.Player.set_fitness_delta(1e-4)
 
 # Random seed configuration
-#utils.set_random_seed("SUPER_RANDOM_SEED")
+#utils.set_random_seed("SUPER_SUPER_RANDOM_SEED")
+
+mutation_instance_name = 'multi_uniform'
+crossover_fun_name = 'uniform'
+implementation_name = 'fill-all'
+# Check whether to shuffle or not parent output
+selector_par_shuffle = True
+
+# Create Generation 0
+base_generation = utils.generate_players(
+    N, ply.PlayerClass.Guerrero,
+    weapon_list, boots_list, helmet_list, gloves_list, armor_list)
+
+for selector_A in range(10, 60, 10):
+    selector_A = 1 - selector_A / 100
+
+    for selector_B in range(10, 60, 10):
+        selector_B = 1 - selector_B / 100
+
+        for mutation_probability in range(3, 8, 1):
+            mutation_probability = 1 -  mutation_probability / 10
+
+            # Selector functions
+            for selector_m1_name in selector_dic:
+                for selector_m2_name in selector_dic:
+                    
+                    if selector_m1_name != selector_m2_name:
+
+                        for selector_m3_name in selector_dic:
+                            for selector_m4_name in selector_dic:
+                                if selector_m3_name != selector_m4_name:
+
+                                    # Check parameters for parent selectors
+                                    selector_parent_list = [selector_m1_name, selector_m2_name]
+                                    (any_par_det_tournament, any_par_prob_tournament, any_par_boltzmann) = (False, False, False)
 
 
-for crossover_fun_name in crossover_dic:
-    for implementation_name in implementation_dic:
-        for selector_A in range(0, 100, 5):
-            selector_A = selector_A / 100
-            for selector_B in range(0, 100, 5):
-                selector_B = selector_B / 100
-                for mutation_probability in range(1, 9, 1):
-                    mutation_probability = mutation_probability / 10
-
-                    # Selector functions
-                    for selector_m1_name in selector_dic:
-                        for selector_m2_name in selector_dic:
-                            for selector_m3_name in selector_dic:
-                                for selector_m4_name in selector_dic:
-
-                                    for mutation_instance_name in mutation_dic:
-
-                                        # If mutation is multi_limited, read M value
-                                        if mutation_instance_name == 'multi_limited':
-                                            limited_multigen_m = 6
-
-                                        # Check parameters for parent selectors
-                                        selector_parent_list = [selector_m1_name, selector_m2_name]
-                                        (any_par_det_tournament, any_par_prob_tournament, any_par_boltzmann) = (False, False, False)
-
-                                        # If any selector is deterministic_tournament, read M value
-                                        if any(name == 'deterministic_tournament' for name in selector_parent_list):
-                                            any_par_det_tournament = True
-                                            # from 1 to N included
-                                            selector_par_det_m = 3
+                                    # If any selector is probabilistic_tournament, read Threshold value
+                                    if any(name == 'probabilistic_tournament' for name in selector_parent_list):
+                                        any_par_prob_tournament = True
+                                        # from 0.5 to 1 included
+                                        selector_par_prob_th = 0.7
 
 
-                                        # If any selector is probabilistic_tournament, read Threshold value
-                                        if any(name == 'probabilistic_tournament' for name in selector_parent_list):
-                                            any_par_prob_tournament = True
-                                            # from 0.5 to 1 included
-                                            selector_par_prob_th = 0.7
+                                    # If any selector is boltzmann, read T0 and Tc
+                                    if any(name == 'boltzmann' for name in selector_parent_list):
+                                        any_par_boltzmann = True
+                                        # bigger than 0
+                                        selector_par_boltzmann_t0 = 150.0
+                                        # bigger than 0, smaller than selector_par_boltzmann_t0
+                                        selector_par_boltzmann_tc = 1.0
+                                        # bigger than 0
+                                        selector_par_boltzmann_k = 0.15
+
+                                    
+                                    # Check parameters for replacement selectors
+                                    selector_replace_list = [selector_m3_name, selector_m4_name]
+                                    (any_rep_det_tournament, any_rep_prob_tournament, any_rep_boltzmann) = (False, False, False)
 
 
-                                        # If any selector is boltzmann, read T0 and Tc
-                                        if any(name == 'boltzmann' for name in selector_parent_list):
-                                            any_par_boltzmann = True
-                                            # bigger than 0
-                                            selector_par_boltzmann_t0 = 10.0
-                                            # bigger than 0, smaller than selector_par_boltzmann_t0
-                                            selector_par_boltzmann_tc = 1.0
-                                            # bigger than 0
-                                            selector_par_boltzmann_k = 0.2
-
-                                        # Check whether to shuffle or not parent output
-                                        selector_par_shuffle = False
-
-                                        # Check parameters for replacement selectors
-                                        selector_replace_list = [selector_m3_name, selector_m4_name]
-                                        (any_rep_det_tournament, any_rep_prob_tournament, any_rep_boltzmann) = (False, False, False)
+                                    # If any selector is probabilistic_tournament, read Threshold value
+                                    if any(name == 'probabilistic_tournament' for name in selector_replace_list):
+                                        any_rep_prob_tournament = True
+                                        # from 0.5 to 1 included
+                                        selector_rep_prob_th = 0.8
 
 
-                                        # If any selector is deterministic_tournament, read M value
-                                        if any(name == 'deterministic_tournament' for name in selector_replace_list):
-                                            any_rep_det_tournament = True
-                                            # from 1 to N included
-                                            selector_rep_det_m = 3
+                                    # If any selector is boltzmann, read T0 and Tc
+                                    if any(name == 'boltzmann' for name in selector_replace_list):
+                                        any_rep_boltzmann = True
+                                        # bigger than 0
+                                        selector_rep_boltzmann_t0 = 150.0
+                                        # bigger than 0, smaller than selector_par_boltzmann_t0
+                                        selector_rep_boltzmann_tc = 1.0
+                                        # bigger than 0
+                                        selector_rep_boltzmann_k = 0.15
 
 
-                                        # If any selector is probabilistic_tournament, read Threshold value
-                                        if any(name == 'probabilistic_tournament' for name in selector_replace_list):
-                                            any_rep_prob_tournament = True
-                                            # from 0.5 to 1 included
-                                            selector_rep_prob_th = 0.8
+                                    
 
+                                    # print("Generation 0\n", base_generation)
 
-                                        # If any selector is boltzmann, read T0 and Tc
-                                        if any(name == 'boltzmann' for name in selector_replace_list):
-                                            any_rep_boltzmann = True
-                                            # bigger than 0
-                                            selector_rep_boltzmann_t0 = 10.0
-                                            # bigger than 0, smaller than selector_par_boltzmann_t0
-                                            selector_rep_boltzmann_tc = 1.0
-                                            # bigger than 0
-                                            selector_rep_boltzmann_k = 0.2
-
-
-                                        # Create Generation 0
-                                        base_generation = utils.generate_players(
-                                            N, ply.PlayerClass.Guerrero,
-                                            weapon_list, boots_list, helmet_list, gloves_list, armor_list)
-
-                                        # print("Generation 0\n", base_generation)
-
-                                        selector_list = []
-                                        for sel_name in selector_parent_list:
-                                            if sel_name == 'deterministic_tournament':
-                                                selector = selector_dic[sel_name](selector_par_det_m)
-                                            elif sel_name == 'probabilistic_tournament':
-                                                selector = selector_dic[sel_name](selector_par_prob_th)
-                                            elif sel_name == 'boltzmann':
-                                                selector = selector_dic[sel_name](selector_par_boltzmann_t0, selector_par_boltzmann_tc, selector_par_boltzmann_k)
-                                            else:
-                                                selector = selector_dic[sel_name]()
-                                            selector_list.append(selector)
-
-                                        for sel_name in selector_replace_list:
-                                            if sel_name == 'deterministic_tournament':
-                                                selector = selector_dic[sel_name](selector_rep_det_m)
-                                            elif sel_name == 'probabilistic_tournament':
-                                                selector = selector_dic[sel_name](selector_rep_prob_th)
-                                            elif sel_name == 'boltzmann':
-                                                selector = selector_dic[sel_name](selector_rep_boltzmann_t0, selector_rep_boltzmann_tc, selector_rep_boltzmann_k)
-                                            else:
-                                                selector = selector_dic[sel_name]()
-                                            selector_list.append(selector)
-
-                                        parent_selectors = sel.CombinedSelector(
-                                            selector_list[0],
-                                            selector_list[1],
-                                            selector_A,
-                                            selector_par_shuffle)
-                                        replace_selectors = sel.CombinedSelector(
-                                            selector_list[2],
-                                            selector_list[3],
-                                            selector_B)
-                                        if mutation_instance_name == 'multi_limited':
-                                            mutation = mutation_dic[mutation_instance_name](
-                                                mutation_probability, limited_multigen_m,
-                                                weapon_list, boots_list, helmet_list, gloves_list, armor_list
-                                            )
+                                    selector_list = []
+                                    for sel_name in selector_parent_list:
+                                        if sel_name == 'deterministic_tournament':
+                                            selector = selector_dic[sel_name](selector_par_det_m)
+                                        elif sel_name == 'probabilistic_tournament':
+                                            selector = selector_dic[sel_name](selector_par_prob_th)
+                                        elif sel_name == 'boltzmann':
+                                            selector = selector_dic[sel_name](selector_par_boltzmann_t0, selector_par_boltzmann_tc, selector_par_boltzmann_k)
                                         else:
-                                            mutation = mutation_dic[mutation_instance_name](
-                                                mutation_probability,
-                                                weapon_list, boots_list, helmet_list, gloves_list, armor_list
-                                            )
-                                        # Stopper List already built in stopper_list
+                                            selector = selector_dic[sel_name]()
+                                        selector_list.append(selector)
 
-                                        # Create algorithm function configuration
-                                        algo_fun_config = gen.AlgorithmFunctionsConfig(
-                                            parent_selectors,
-                                            replace_selectors,
-                                            crossover_dic[crossover_fun_name],
-                                            mutation,
-                                            stopper_list
+                                    for sel_name in selector_replace_list:
+                                        if sel_name == 'deterministic_tournament':
+                                            selector = selector_dic[sel_name](selector_rep_det_m)
+                                        elif sel_name == 'probabilistic_tournament':
+                                            selector = selector_dic[sel_name](selector_rep_prob_th)
+                                        elif sel_name == 'boltzmann':
+                                            selector = selector_dic[sel_name](selector_rep_boltzmann_t0, selector_rep_boltzmann_tc, selector_rep_boltzmann_k)
+                                        else:
+                                            selector = selector_dic[sel_name]()
+                                        selector_list.append(selector)
+
+                                    parent_selectors = sel.CombinedSelector(
+                                        selector_list[0],
+                                        selector_list[1],
+                                        selector_A,
+                                        selector_par_shuffle)
+                                    replace_selectors = sel.CombinedSelector(
+                                        selector_list[2],
+                                        selector_list[3],
+                                        selector_B)
+                                    if mutation_instance_name == 'multi_limited':
+                                        mutation = mutation_dic[mutation_instance_name](
+                                            mutation_probability, limited_multigen_m,
+                                            weapon_list, boots_list, helmet_list, gloves_list, armor_list
                                         )
+                                    else:
+                                        mutation = mutation_dic[mutation_instance_name](
+                                            mutation_probability,
+                                            weapon_list, boots_list, helmet_list, gloves_list, armor_list
+                                        )
+                                    # Stopper List already built in stopper_list
 
-                                        start_time = time.time()
+                                    # Create algorithm function configuration
+                                    algo_fun_config = gen.AlgorithmFunctionsConfig(
+                                        parent_selectors,
+                                        replace_selectors,
+                                        crossover_dic[crossover_fun_name],
+                                        mutation,
+                                        stopper_list
+                                    )
 
-                                        # Create algorithm instance
-                                        algo = gen.GeneticAlgorithm(
-                                            base_generation, K, algo_fun_config,
-                                            implementation_dic[implementation_name])
+                                    start_time = time.time()
 
-                                        while not algo.is_algorithm_over():
-                                            curr_gen = algo.iterate()
+                                    # Create algorithm instance
+                                    algo = gen.GeneticAlgorithm(
+                                        base_generation, K, algo_fun_config,
+                                        implementation_dic[implementation_name])
 
-                                        i = i + 1
-                                        if algo.best_fit.fitness() > 25.0:
-                                            # Print config params
-                                            print(f'---------------------------------------- \n')
-                                            print(f'\tIteration Number:\t{i}')
-                                            print(f'---------------------------------------- \n'
-                                                  f'Run parameters\n'
-                                                  f'\tPlayer class:\tguerrero\n'
-                                                  f'\tMax. Rows:\t1000000\n'
-                                                  f'\tN:\t\t{N}\n'
-                                                  f'\tK:\t\t{K}\n'
-                                                  f'\tCrossover:\t{crossover_fun_name}\n'
-                                                  f'\tMutation:\t{mutation_instance_name}\n'
-                                                  f'\tMutation prob:\t{mutation_probability}'
-                                                  )
-                                            if mutation_instance_name == 'multi_limited': print(
-                                                f'\tMutation M:\t{limited_multigen_m}')
-                                            print(f'\n\tSelector A:\t{selector_A}\n'
-                                                  f'\tSelector m1:\t{selector_m1_name}\n'
-                                                  f'\tSelector m2:\t{selector_m2_name}\n'
-                                                  f'\tShuffle:\t{selector_par_shuffle}'
-                                                  )
-                                            if any_par_det_tournament: print(f'\tDet. Tour. M:\t{selector_par_det_m}')
-                                            if any_par_prob_tournament: print(
-                                                f'\tProb. Tour. Th:\t{selector_par_prob_th}')
-                                            if any_par_boltzmann:
-                                                print(f'\tBoltzmann T0:\t{selector_par_boltzmann_t0}\n'
-                                                      f'\tBoltzmann TC:\t{selector_par_boltzmann_tc}\n'
-                                                      f'\tBoltzmann K:\t{selector_par_boltzmann_k}'
-                                                      )
-                                            print(f'\n\tSelector B:\t{selector_B}\n'
-                                                  f'\tSelector m3:\t{selector_m3_name}\n'
-                                                  f'\tSelector m4:\t{selector_m4_name}'
-                                                  )
-                                            if any_rep_det_tournament: print(f'\tDet. Tour. M:\t{selector_rep_det_m}')
-                                            if any_rep_prob_tournament: print(
-                                                f'\tProb. Tour. Th:\t{selector_rep_prob_th}')
-                                            if any_rep_boltzmann:
-                                                print(f'\tBoltzmann T0:\t{selector_rep_boltzmann_t0}\n'
-                                                      f'\tBoltzmann TC:\t{selector_rep_boltzmann_tc}\n'
-                                                      f'\tBoltzmann K:\t{selector_rep_boltzmann_k}'
-                                                      )
-                                            print(f'\n\tImplementation:\t{implementation_name}')
-                                            for stopper in stopper_list:
-                                                print(f'\tStopper:\t{stopper}')
-                                            print('----------------------------------------')
+                                    while not algo.is_algorithm_over():
+                                        curr_gen = algo.iterate()
+                                    
+                                    print(f'---------------------------------------- \n')
+                                    print(f'\tIteration Number:\t{i}')
+                                    i = i + 1
+                                    if algo.best_fit.fitness() > 28.0:
+                                        # Print config params
+                                        
+                                        print(f'---------------------------------------- \n'
+                                            f'Run parameters\n'
+                                            f'\tPlayer class:\tguerrero\n'
+                                            f'\tMax. Rows:\t1000000\n'
+                                            f'\tN:\t\t{N}\n'
+                                            f'\tK:\t\t{K}\n'
+                                            f'\tCrossover:\t{crossover_fun_name}\n'
+                                            f'\tMutation:\t{mutation_instance_name}\n'
+                                            f'\tMutation prob:\t{mutation_probability}'
+                                            )
+                                        if mutation_instance_name == 'multi_limited': print(
+                                            f'\tMutation M:\t{limited_multigen_m}')
+                                        print(f'\n\tSelector A:\t{selector_A}\n'
+                                            f'\tSelector m1:\t{selector_m1_name}\n'
+                                            f'\tSelector m2:\t{selector_m2_name}\n'
+                                            f'\tShuffle:\t{selector_par_shuffle}'
+                                            )
+                                        if any_par_det_tournament: print(f'\tDet. Tour. M:\t{selector_par_det_m}')
+                                        if any_par_prob_tournament: print(
+                                            f'\tProb. Tour. Th:\t{selector_par_prob_th}')
+                                        if any_par_boltzmann:
+                                            print(f'\tBoltzmann T0:\t{selector_par_boltzmann_t0}\n'
+                                                f'\tBoltzmann TC:\t{selector_par_boltzmann_tc}\n'
+                                                f'\tBoltzmann K:\t{selector_par_boltzmann_k}'
+                                                )
+                                        print(f'\n\tSelector B:\t{selector_B}\n'
+                                            f'\tSelector m3:\t{selector_m3_name}\n'
+                                            f'\tSelector m4:\t{selector_m4_name}'
+                                            )
+                                        if any_rep_det_tournament: print(f'\tDet. Tour. M:\t{selector_rep_det_m}')
+                                        if any_rep_prob_tournament: print(
+                                            f'\tProb. Tour. Th:\t{selector_rep_prob_th}')
+                                        if any_rep_boltzmann:
+                                            print(f'\tBoltzmann T0:\t{selector_rep_boltzmann_t0}\n'
+                                                f'\tBoltzmann TC:\t{selector_rep_boltzmann_tc}\n'
+                                                f'\tBoltzmann K:\t{selector_rep_boltzmann_k}'
+                                                )
+                                        print(f'\n\tImplementation:\t{implementation_name}')
+                                        for stopper in stopper_list:
+                                            print(f'\tStopper:\t{stopper}')
+                                        print('----------------------------------------')
 
-                                            print(f'Algorithm Run Completed by {algo.current_stopper} \t ⏱  {round(time.time() - start_time, 6)} seconds\n----------------------------------------\n')
+                                        print(f'Algorithm Run Completed by {algo.current_stopper} \t ⏱  {round(time.time() - start_time, 6)} seconds\n----------------------------------------\n')
 
-                                            # Print result
-                                            print(f'Best fit: {algo.best_fit}')
+                                        # Print result
+                                        print(f'Best fit: {algo.best_fit}')
 
