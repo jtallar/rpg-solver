@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 def signal_handler(sig, frame):
     if algo and start_time:
         print(f'\nAlgorithm Run Interrupted by Ctrl+C \t\t ⏱  {round(time.time() - start_time, 6)} seconds\n----------------------------------------\n')
+        print(f'Generation count: {algo.generation_count}\tDiversity: {algo.diversity}')
         print(f'Best fit so far: {algo.best_fit}')
     print('\nExiting by SIGINT...')
     sys.exit(2)
@@ -345,6 +346,7 @@ end_time = time.time()
 print(f'Algorithm Run Completed by {algo.current_stopper} \t ⏱  {round(end_time - start_time, 6)} seconds\n----------------------------------------\n')
 
 # Print result
+print(f'Generation count: {algo.generation_count}\tDiversity: {algo.diversity}')
 print(f'Best fit: {algo.best_fit}')
 # Keep window plot open
 if plot_boolean: 
