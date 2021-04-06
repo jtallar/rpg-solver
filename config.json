@@ -57,6 +57,6 @@
 	"random_seed": "RANDOM_SEED",
 
 	"print_stats": false,
-	"plot": false,
+	"plot": true,
 	"plot_interval_time": 0.3
 }

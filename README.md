@@ -167,7 +167,7 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 	"random_seed": "RANDOM_SEED",
 
 	"print_stats": false,
-	"plot": false,
+	"plot": true,
 	"plot_interval_time": 0.3
 }
 ```
@@ -233,7 +233,7 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 	"random_seed": "RANDOM_SEED",
 
 	"print_stats": false,
-	"plot": false,
+	"plot": true,
 	"plot_interval_time": 0.3
 }
 ```
