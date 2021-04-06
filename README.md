@@ -141,9 +141,9 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 	"selector_method_4": "ranking",
 	"selector_B_det_tournament_m": 3,
 	"selector_B_prob_tournament_th": 0.8,
-	"selector_B_boltzmann_t0": 10.0,
+	"selector_B_boltzmann_t0": 50.0,
 	"selector_B_boltzmann_tc": 1.0,
-	"selector_B_boltzmann_k": 0.2,
+	"selector_B_boltzmann_k": 0.15,
 
 	"implementation": "fill-all",
 
@@ -154,7 +154,7 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 	"stopper_diversity_on": false,
 	"stop_diversity_proportion": 0.05,
 	"stopper_acceptable_on": false,
-	"stop_acceptable_fitness": 23.0,
+	"stop_acceptable_fitness": 30.0,
 	"stopper_structural_on": true,
 	"stop_structural_gen_count": 50,
 	"stop_structural_proportion": 0.95,
@@ -173,6 +173,72 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 ```
 
 ### Ejemplo 2
+```json
+{
+	"armas_file": "dataset/armas.tsv",
+	"botas_file": "dataset/botas.tsv",
+	"cascos_file": "dataset/cascos.tsv",
+	"guantes_file": "dataset/guantes.tsv",
+	"pecheras_file": "dataset/pecheras.tsv",
+	"max_rows_tsv": 1000000,
+
+	"player_class": "guerrero",
+	"N": 20000,
+	"K": 5000,
+
+	"crossover": "uniform",
+
+	"mutation": "multi_uniform",
+	"mutation_probability": 0.25,
+	"limited_multigen_m": 6,
+
+	"A": 0.35,
+	"selector_method_1": "ranking",
+	"selector_method_2": "deterministic_tournament",
+	"selector_A_shuffle": true,
+	"selector_A_det_tournament_m": 3,
+	"selector_A_prob_tournament_th": 0.8,
+	"selector_A_boltzmann_t0": 10.0,
+	"selector_A_boltzmann_tc": 1.0,
+	"selector_A_boltzmann_k": 0.2,
+
+	"B": 0.8,
+	"selector_method_3": "elite",
+	"selector_method_4": "universal",
+	"selector_B_det_tournament_m": 3,
+	"selector_B_prob_tournament_th": 0.8,
+	"selector_B_boltzmann_t0": 50.0,
+	"selector_B_boltzmann_tc": 1.0,
+	"selector_B_boltzmann_k": 0.15,
+
+	"implementation": "fill-parent",
+
+	"stopper_time_on": true,
+	"stop_time_sec": 1000.0,
+	"stopper_generation_count_on": true,
+	"stop_generation_count": 200,
+	"stopper_diversity_on": false,
+	"stop_diversity_proportion": 0.05,
+	"stopper_acceptable_on": false,
+	"stop_acceptable_fitness": 30.0,
+	"stopper_structural_on": true,
+	"stop_structural_gen_count": 50,
+	"stop_structural_proportion": 0.95,
+	"stopper_content_on": true,
+	"stop_content_gen_count": 50,
+
+	"fitness_delta": 1e-4,
+
+	"random_seed_on": false,
+	"random_seed": "RANDOM_SEED",
+
+	"print_stats": false,
+	"plot": true,
+	"plot_interval_time": 0.3
+}
+```
+
+### Ejemplo 3
 ```json
 {
 	"armas_file": "dataset/armas.tsv",
@@ -222,10 +288,10 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 	"stopper_acceptable_on": true,
 	"stop_acceptable_fitness": 30.0,
 	"stopper_structural_on": true,
-	"stop_structural_gen_count": 100,
+	"stop_structural_gen_count": 50,
 	"stop_structural_proportion": 0.95,
 	"stopper_content_on": true,
-	"stop_content_gen_count": 100,
+	"stop_content_gen_count": 50,
 
 	"fitness_delta": 1e-4,
 
