@@ -80,8 +80,8 @@ Todas las configuraciones de ejecución se establecen en el archivo `config.json
 - **selector_B_boltzmann_k** indica el valor de K para el selector boltzmann en caso de elegir dicho selector de padres.
 
 - **implementation** indica el nombre del método de implementación a utilizar para conformar la nueva generación. Los valores posibles son
-    - `fill-all`      --> Implementación Fill-All
-    - `fill-parent`   --> Implementación Fill-Parent
+    - `fill-all`     --> Implementación Fill-All
+    - `fill-parent`  --> Implementación Fill-Parent
 
 - **stopper_time_on** indica si se utiliza (true) o no (false) el criterio de corte por tiempo con parámetro `stop_time_sec`.
 - **stop_time_sec** indica la cantidad de segundos máxima de ejecución para el algoritmo genético en caso de habilitar el criterio de corte por tiempo.
