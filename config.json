@@ -31,9 +31,9 @@
 	"selector_method_4": "ranking",
 	"selector_B_det_tournament_m": 3,
 	"selector_B_prob_tournament_th": 0.8,
-	"selector_B_boltzmann_t0": 10.0,
+	"selector_B_boltzmann_t0": 50.0,
 	"selector_B_boltzmann_tc": 1.0,
-	"selector_B_boltzmann_k": 0.2,
+	"selector_B_boltzmann_k": 0.15,
 
 	"implementation": "fill-all",
 
